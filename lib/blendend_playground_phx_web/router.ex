@@ -18,7 +18,7 @@ defmodule BlendendPlaygroundPhxWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    get "/playground", PlaygroundController, :index
+    live "/playground", PlaygroundLive, :index
   end
 
   # Other scopes may use custom stacks.
