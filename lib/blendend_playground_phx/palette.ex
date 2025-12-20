@@ -311,7 +311,7 @@ defmodule BlendendPlaygroundPhx.Palette do
 
   defp priv_palette_files do
     app_paths =
-      case :code.priv_dir(:blendend_playground) do
+      case :code.priv_dir(:blendend_playground_phx) do
         {:error, _} -> []
         dir when is_list(dir) or is_binary(dir) -> [dir]
       end

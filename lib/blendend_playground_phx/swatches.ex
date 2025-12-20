@@ -108,7 +108,7 @@ defmodule BlendendPlaygroundPhx.Swatches do
 
   defp priv_font_path(file) do
     otp_path =
-      case :code.priv_dir(:blendend_playground) do
+      case :code.priv_dir(:blendend_playground_phx) do
         {:error, _} -> nil
         path -> Path.join(path, "fonts/#{file}")
       end

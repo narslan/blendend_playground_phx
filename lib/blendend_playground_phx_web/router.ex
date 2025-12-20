@@ -19,6 +19,7 @@ defmodule BlendendPlaygroundPhxWeb.Router do
 
     get "/", PageController, :home
     live "/playground", PlaygroundLive, :index
+    live "/swatches", SwatchesLive, :index
   end
 
   # Other scopes may use custom stacks.
