@@ -1,9 +1,9 @@
 # Port of the demo https://openprocessing.org/sketch/1736173
 # by the author takawo https://openprocessing.org/user/6533
-use BlendendPlayground.Calculation.Macros
-alias BlendendPlayground.Palette
+use BlendendPlaygroundPhx.Calculation.Macros
+alias BlendendPlaygroundPhx.Palette
 
-defmodule BlendendPlayground.Demos.Curtains do
+defmodule BlendendPlaygroundPhx.Demos.Curtains do
   @deg_to_rad :math.pi() / 180.0
 
   defp deg_to_rad(deg), do: deg * @deg_to_rad
@@ -96,7 +96,7 @@ end
 
 width = 800
 height = 800
-alias BlendendPlayground.Demos.Curtains
+alias BlendendPlaygroundPhx.Demos.Curtains
 
 draw width, height do
   bg = hsv(0, 0, 0.9)

@@ -1,8 +1,8 @@
 # Port of https://openprocessing.org/sketch/855987 to blendend.
 # Exercises blend modes (burn), gradients, and soft blur.
-alias BlendendPlayground.Palette
+alias BlendendPlaygroundPhx.Palette
 
-defmodule BlendendPlayground.Demos.BurnGrid do
+defmodule BlendendPlaygroundPhx.Demos.BurnGrid do
   def noise_overlay(w, h) do
     points =
       for _ <- 1..round(w * h * 0.1) do
@@ -32,7 +32,7 @@ end
 
 w = 800
 h = 800
-alias BlendendPlayground.Demos.BurnGrid, as: Demo
+alias BlendendPlaygroundPhx.Demos.BurnGrid, as: Demo
 
 palette =
   Palette.palette_by_name("artists.burn_grid_demo")

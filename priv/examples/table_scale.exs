@@ -1,6 +1,6 @@
 # This is the draft for a table layout. 
-alias BlendendPlayground.Palette
-alias BlendendPlayground.Gradients
+alias BlendendPlaygroundPhx.Palette
+alias BlendendPlaygroundPhx.Gradients
 width = 1500
 height = 1000
 

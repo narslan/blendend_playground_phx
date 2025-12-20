@@ -24,7 +24,7 @@ total_w = cols * panel_w + (cols - 1) * gap
 total_h = rows * panel_h + (rows - 1) * gap
 
 draw total_w, total_h do
-  fish = BlendendPlayground.Demos.Fish.data()
+  fish = BlendendPlaygroundPhx.Demos.Fish.data()
   {:ok, img} = Image.from_data(fish)
   {:ok, {img_w, img_h}} = Image.size(img)
 

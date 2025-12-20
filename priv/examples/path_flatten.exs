@@ -1,8 +1,8 @@
 # path flattening demo
 alias Blendend.Path
 alias Blendend.Text.{Face, Font, GlyphBuffer, GlyphRun}
-alias BlendendPlayground.Palette
-use BlendendPlayground.Calculation.Macros
+alias BlendendPlaygroundPhx.Palette
+use BlendendPlaygroundPhx.Calculation.Macros
 
 width = 800
 height = 800

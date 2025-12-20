@@ -1,5 +1,5 @@
 # ased on the data from https://commons.wikimedia.org/wiki/File:Black_cherry_tree_histogram.svg
-alias BlendendPlayground.Axis
+alias BlendendPlaygroundPhx.Axis
 use Blendend.Draw
 
 w = 980

@@ -2,7 +2,7 @@
 # (centripetal, reduced corner overshoot) on the same points.
 
 alias Blendend.Path
-alias BlendendPlayground.Curves
+alias BlendendPlaygroundPhx.Curves
 
 w = 900
 h = 520

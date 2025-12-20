@@ -2,7 +2,7 @@
 # https://github.com/kgolid/p5ycho/blob/master/horizon3/sketch.js
 # by kgolid
 
-defmodule BlendendPlayground.Demos.Watercolor2 do
+defmodule BlendendPlaygroundPhx.Demos.Watercolor2 do
   @default_initial_size 5
   @default_initial_deviation 300.0
   @default_deviation 90.0
@@ -91,7 +91,7 @@ defmodule BlendendPlayground.Demos.Watercolor2 do
   end
 end
 
-alias BlendendPlayground.Demos.Watercolor2
+alias BlendendPlaygroundPhx.Demos.Watercolor2
 
 width = 1500
 height = 1000

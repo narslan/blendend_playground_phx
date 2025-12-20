@@ -1,5 +1,5 @@
 # PostScript tiger workbench: decodes Blend2D tiger.
-alias BlendendPlayground.Demos.{Tiger, TigerData}
+alias BlendendPlaygroundPhx.Demos.{Tiger, TigerData}
 
 draw TigerData.width(), TigerData.height() do
   clear(fill: rgb(240, 240, 240))

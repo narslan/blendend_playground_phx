@@ -1,8 +1,8 @@
 # Drawing catmull-Rom spline. Curves.curve_vertices!/3 mirrors curveVertex of p5.js
 
 alias Blendend.Path
-alias BlendendPlayground.Palette
-alias BlendendPlayground.Curves
+alias BlendendPlaygroundPhx.Palette
+alias BlendendPlaygroundPhx.Curves
 
 draw 400, 400 do
   [bg | palette] =

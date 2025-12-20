@@ -1,5 +1,5 @@
 # circle of fifths
-alias BlendendPlayground.Palette
+alias BlendendPlaygroundPhx.Palette
 use Blendend.Draw
 width = 1500
 height = 1500

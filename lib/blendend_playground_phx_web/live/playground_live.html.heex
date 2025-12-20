@@ -1,41 +1,29 @@
 <Layouts.app flash={@flash}>
-  <div class="flex flex-wrap items-end justify-between gap-6">
-    <div>
+  <div class="flex flex-wrap items-center justify-between gap-6">
+    <div class="flex flex-wrap items-center gap-4">
       <p class="text-xs font-semibold uppercase tracking-[0.3em] text-base-content/60">
         Playground
       </p>
-      <h1 class="mt-3 text-xl font-semibold tracking-tight sm:text-2xl">
-        Auto-render as you type
-      </h1>
-      <p class="mt-3 max-w-2xl text-base-content/70">
-        Every edit triggers the renderer. We'll add throttling and a history panel next.
-      </p>
+      <.form for={@form} id="playground-example-form" phx-change="select-example" class="w-full sm:w-auto">
+        <.input
+          field={@form[:example]}
+          id="playground-example"
+          type="select"
+          options={@example_options}
+          class="min-w-[220px] rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:focus:border-slate-600 dark:focus:ring-slate-700"
+        />
+      </.form>
     </div>
-    <div class="text-sm text-base-content/60">
-      LiveView renders from <code class="rounded bg-base-200 px-2 py-1">/playground</code>
-    </div>
+    <p class="text-xs text-base-content/60">
+      Every edit triggers the renderer · {length(@examples)} examples
+    </p>
   </div>
 
-  <div class="mt-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
+  <div class="mt-6 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
     <div class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40">
       <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
         Source
       </h2>
-      <div class="mt-5 flex flex-wrap items-center gap-3">
-        <.form for={@form} id="playground-example-form" phx-change="select-example" class="w-full sm:w-auto">
-          <.input
-            field={@form[:example]}
-            id="playground-example"
-            type="select"
-            options={@example_options}
-            class="min-w-[220px] rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:focus:border-slate-600 dark:focus:ring-slate-700"
-          />
-        </.form>
-        <p class="text-xs text-base-content/60">
-          {length(@examples)} examples available.
-        </p>
-      </div>
-
       <.form for={@form} id="playground-form" phx-change="code-change" class="mt-5 grid gap-4">
         <.input
           field={@form[:code]}

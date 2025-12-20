@@ -1,5 +1,5 @@
-alias BlendendPlayground.Palette
-alias BlendendPlayground.Gradients
+alias BlendendPlaygroundPhx.Palette
+alias BlendendPlaygroundPhx.Gradients
 
 draw 800, 800 do
   clear(fill: rgb(255, 255, 255))

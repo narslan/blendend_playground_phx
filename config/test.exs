@@ -7,12 +7,6 @@ config :blendend_playground_phx, BlendendPlaygroundPhxWeb.Endpoint,
   secret_key_base: "yfIPP0Q2AxUMxwfPqdfdw48aED4Fpw0A87MvClCfbvdN5Vvaq8gXGSnv99MENuGv",
   server: false
 
-# In test we don't send emails
-config :blendend_playground_phx, BlendendPlaygroundPhx.Mailer, adapter: Swoosh.Adapters.Test
-
-# Disable swoosh api client as it is only required for production adapters
-config :swoosh, :api_client, false
-
 # Print only warnings and errors during test
 config :logger, level: :warning
 

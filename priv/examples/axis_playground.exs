@@ -1,4 +1,4 @@
-alias BlendendPlayground.Axis
+alias BlendendPlaygroundPhx.Axis
 use Blendend.Draw
 w = 900
 h = 600

@@ -1,6 +1,6 @@
 # Port of https://openprocessing.org/sketch/1630344 to blendend.
 # Staggered rows of clipped circles filled with layered petals.
-defmodule BlendendPlayground.Demos.FloralWave do
+defmodule BlendendPlaygroundPhx.Demos.FloralWave do
   @palettes [
     "202c39-283845-b8b08d-f2d492-f29559",
     "1f2041-4b3f72-ffc857-119da4-19647e",
@@ -134,7 +134,7 @@ end
 # ---------------------------------------------------------------------------
 w = 800
 h = 800
-alias BlendendPlayground.Demos.FloralWave
+alias BlendendPlaygroundPhx.Demos.FloralWave
 
 draw w, h do
   palette = FloralWave.pick_palette()

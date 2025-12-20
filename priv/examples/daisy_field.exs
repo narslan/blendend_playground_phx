@@ -1,9 +1,9 @@
 # Port of https://openprocessing.org/sketch/2522094.
 alias Blendend.Path
 alias Blendend.Style.Color
-use BlendendPlayground.Calculation.Macros
+use BlendendPlaygroundPhx.Calculation.Macros
 
-defmodule BlendendPlayground.Demos.DaisyField do
+defmodule BlendendPlaygroundPhx.Demos.DaisyField do
   @tau :math.pi() * 2
   @circle_angles Enum.map(0..90, &(&1 * (@tau / 90)))
   @petal_colors ["#3f88c5", "#c1292e", "#ffffff", "#ed91bd", "#17bebb", "#f1d302", "#2e933c"]
@@ -152,7 +152,7 @@ end
 
 width = 800
 height = 800
-alias BlendendPlayground.Demos.DaisyField
+alias BlendendPlaygroundPhx.Demos.DaisyField
 
 draw width, height do
   clear(fill: rgb(235, 235, 235))

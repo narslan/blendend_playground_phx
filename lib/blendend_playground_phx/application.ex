@@ -7,13 +7,14 @@ defmodule BlendendPlaygroundPhx.Application do
 
   @impl true
   def start(_type, _args) do
+    :ok = BlendendPlaygroundPhx.Palette.init_cache()
+
     children = [
+      BlendendPlaygroundPhx.Fonts,
       BlendendPlaygroundPhxWeb.Telemetry,
-      {DNSCluster, query: Application.get_env(:blendend_playground_phx, :dns_cluster_query) || :ignore},
+      {DNSCluster,
+       query: Application.get_env(:blendend_playground_phx, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: BlendendPlaygroundPhx.PubSub},
-      # Start a worker by calling: BlendendPlaygroundPhx.Worker.start_link(arg)
-      # {BlendendPlaygroundPhx.Worker, arg},
-      # Start to serve requests, typically the last entry
       BlendendPlaygroundPhxWeb.Endpoint
     ]
 

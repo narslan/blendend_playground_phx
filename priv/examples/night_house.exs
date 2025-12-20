@@ -1,9 +1,9 @@
 # https://openprocessing.org/sketch/2497472
 use Blendend.Draw
-use BlendendPlayground.Calculation.Macros
-alias BlendendPlayground.Palette
+use BlendendPlaygroundPhx.Calculation.Macros
+alias BlendendPlaygroundPhx.Palette
 
-defmodule BlendendPlayground.Demos.NightHouse do
+defmodule BlendendPlaygroundPhx.Demos.NightHouse do
   # drawHouse(x, y + hStep + ny, xStep, h, palette);
   def draw_house(x, y, w, h, palette) do
     palette = Enum.shuffle(palette)
@@ -135,7 +135,7 @@ end
 
 width = 800
 height = 800
-alias BlendendPlayground.Demos.NightHouse
+alias BlendendPlaygroundPhx.Demos.NightHouse
 
 draw width, height do
   gradient =
