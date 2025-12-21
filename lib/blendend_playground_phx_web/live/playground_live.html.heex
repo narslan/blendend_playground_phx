@@ -4,7 +4,12 @@
       <p class="text-xs font-semibold uppercase tracking-[0.3em] text-base-content/60">
         Playground
       </p>
-      <.form for={@form} id="playground-example-form" phx-change="select-example" class="w-full sm:w-auto">
+      <.form
+        for={@form}
+        id="playground-example-form"
+        phx-change="select-example"
+        class="w-full sm:w-auto"
+      >
         <.input
           field={@form[:example]}
           id="playground-example"
@@ -12,6 +17,29 @@
           options={@example_options}
           class="min-w-[220px] rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:focus:border-slate-600 dark:focus:ring-slate-700"
         />
+      </.form>
+      <.form
+        for={@save_form}
+        id="playground-save-form"
+        phx-submit="save-as"
+        class="flex flex-wrap items-center gap-3"
+      >
+        <.input
+          field={@save_form[:name]}
+          id="playground-save-name"
+          type="text"
+          placeholder="New example name"
+          autocomplete="off"
+          class="min-w-[200px] rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold tracking-[0.2em] text-slate-700 shadow-sm transition placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:ring-slate-700"
+        />
+        <button
+          type="submit"
+          id="playground-save-button"
+          phx-disable-with="Saving..."
+          class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+        >
+          Save to
+        </button>
       </.form>
     </div>
     <p class="text-xs text-base-content/60">
@@ -21,10 +49,28 @@
 
   <div class="mt-6 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
     <div class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40">
-      <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
-        Source
-      </h2>
-      <.form for={@form} id="playground-form" phx-change="code-change" class="mt-5 grid gap-4">
+      <div class="flex items-center justify-between gap-4">
+        <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
+          Source
+        </h2>
+        <button
+          type="submit"
+          form="playground-form"
+          id="playground-update"
+          phx-disable-with="Saving..."
+          class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+        >
+          Update
+        </button>
+      </div>
+
+      <.form
+        for={@form}
+        id="playground-form"
+        phx-change="code-change"
+        phx-submit="save-code"
+        class="mt-5 grid gap-4"
+      >
         <.input
           field={@form[:code]}
           id="playground-code"
@@ -37,9 +83,16 @@
     </div>
 
     <div class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40">
-      <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
-        Preview
-      </h2>
+      <div class="flex items-center justify-between gap-4">
+        <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
+          Preview
+        </h2>
+        <%= if @render_ms && @image_base64 do %>
+          <p id="playground-render-time" class="text-xs text-base-content/60">
+            Render: {@render_ms} ms
+          </p>
+        <% end %>
+      </div>
       <div class="mt-5">
         <%= if @submitted? do %>
           <%= if @image_base64 do %>
@@ -53,7 +106,7 @@
           <% else %>
             <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200">
               <p class="font-semibold">Render failed</p>
-              <p class="mt-2 whitespace-pre-wrap text-xs leading-relaxed"><%= @error %></p>
+              <p class="mt-2 whitespace-pre-wrap text-xs leading-relaxed">{@error}</p>
             </div>
           <% end %>
         <% else %>

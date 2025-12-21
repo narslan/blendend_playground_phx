@@ -10,7 +10,7 @@ plot_y0 = margin.top
 plot_y1 = h - margin.bottom
 
 draw w, h do
-  clear(fill: rgb(248, 248, 248))
+  clear(fill: rgb(231, 232, 216))
 
   title_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 26.0)
   axis_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
