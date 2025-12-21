@@ -62,7 +62,7 @@ defmodule BlendendPlaygroundPhx.MixProject do
       {:jason, "~> 1.2"},
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
-      {:blendend, path: "../blendend"},
+      {:blendend, "~> 0.3"},
       {:scale, github: "narslan/scale"}
     ]
   end
