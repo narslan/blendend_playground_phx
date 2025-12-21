@@ -77,7 +77,11 @@ defmodule BlendendPlaygroundPhx.MixProject do
     [
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
-      "assets.build": ["compile", "tailwind blendend_playground_phx", "esbuild blendend_playground_phx"],
+      "assets.build": [
+        "compile",
+        "tailwind blendend_playground_phx",
+        "esbuild blendend_playground_phx"
+      ],
       "assets.deploy": [
         "tailwind blendend_playground_phx --minify",
         "esbuild blendend_playground_phx --minify",
