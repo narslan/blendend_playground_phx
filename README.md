@@ -6,7 +6,6 @@ Safety: the backend evaluates the code you type. Run it only on a trusted machin
 ## Features
 - **Playground** – live sketchbook for `blendend` snippets. 
 - **Swatches** – palette browser rendered as collages. It shows how colors interact on a composition.
-- **Font Explorer** – [WIP] scans bundled fonts plus `~/.fonts` by default and shows families/weights with live previews. To add more search paths, set `config :blendend_playground_phx, :font_paths, ["/path/to/fonts"]` in your own `config/config.exs` before booting the server.
 
 To start your Phoenix server:
 
@@ -15,12 +14,10 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Licenses
 
-## Learn more
-
-* Official website: https://www.phoenixframework.org/
-* Guides: https://hexdocs.pm/phoenix/overview.html
-* Docs: https://hexdocs.pm/phoenix
-* Forum: https://elixirforum.com/c/phoenix-forum
-* Source: https://github.com/phoenixframework/phoenix
+- This project is released under the MIT License (see `LICENSE`).
+- `blend2d` is licensed under the zlib license.
+- The fonts under `priv/fonts/` are distributed under the SIL Open Font License.
+- [Chromotome Palettes](https://github.com/kgolid/chromotome) is distributed under MIT License.
+- More palettes are taken from takawo's sketches (https://openprocessing.org/user/6533) are released under https://creativecommons.org/licenses/by-nc-sa/3.0/
