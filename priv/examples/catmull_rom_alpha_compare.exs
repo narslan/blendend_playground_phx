@@ -3,6 +3,7 @@
 
 alias Blendend.Path
 alias BlendendPlaygroundPhx.Curves
+alias BlendendPlaygroundPhx.Palette
 
 w = 900
 h = 520
@@ -18,11 +19,18 @@ points = [
   {820, 260}
 ]
 
-bg = rgb(0xF7, 0xF4, 0xEE)
-poly_col = rgb(0, 0, 0, 40)
-uniform_col = rgb(230, 90, 60, 200)
-centripetal_col = rgb(40, 120, 230, 200)
-pt_col = rgb(0, 0, 0, 160)
+palette = Palette.palette_by_name("exposito.exposito")
+hexes =
+     List.wrap(Map.get(palette, :background, [])) ++ Map.get(palette, :colors, []) 
+rgbs = hexes
+ |> Palette.from_hex_list_rgb()
+ |> Enum.map(fn {r, g, b} -> rgb(r, g, b) end)
+
+[bg | palette] = rgbs
+poly_col = Enum.at(palette, 0)
+uniform_col = Enum.at(palette, 1)
+centripetal_col = Enum.at(palette, 2)
+pt_col = Enum.at(palette, 3)
 
 draw w, h do
   clear(fill: bg)

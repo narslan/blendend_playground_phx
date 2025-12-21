@@ -22,12 +22,10 @@ draw 400, 400 do
   Path.new!()
   |> Curves.curve_vertices!(points, closed?: false)
   |> Path.translate!(100, 100)
-  |> stroke_path(stroke: Enum.random(palette))
+  |> stroke_path(stroke: Enum.at(palette, 1))
 
   translate(100, 100)
-
-  circle_color = Enum.random(palette)
-
+  circle_color = Enum.at(palette, 3)
   Stream.each(points, fn {x, y} -> circle(x, y, 3, fill: circle_color) end)
   |> Stream.run()
 
@@ -36,8 +34,8 @@ draw 400, 400 do
   c2 = {210.0, 250.0}
   p3 = {210.0, 30.0}
 
-  curve_color = Enum.random(palette)
-  curve_color2 = Enum.random(palette)
+  curve_color = Enum.at(palette, 2)
+  curve_color2 = Enum.at(palette, 1)
 
   curve =
     Path.new!()
@@ -50,18 +48,5 @@ draw 400, 400 do
       elem(p3, 0),
       elem(p3, 1)
     )
-
-  curve2 =
-    Path.new!()
-    |> Path.move_to!(elem(p0, 0), elem(p0, 1))
-    |> Path.conic_to!(
-      elem(c1, 0),
-      elem(c1, 1),
-      elem(c2, 0),
-      elem(c2, 1),
-      1.0
-    )
-
   stroke_path(curve, stroke: curve_color, stroke_width: 3.5, stroke_cap: :round)
-  fill_path(curve2, fill: curve_color2)
 end
