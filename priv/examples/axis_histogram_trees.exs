@@ -1,5 +1,6 @@
 # ased on the data from https://commons.wikimedia.org/wiki/File:Black_cherry_tree_histogram.svg
 alias BlendendPlaygroundPhx.Axis
+alias BlendendPlaygroundPhx.Ticks
 use Blendend.Draw
 
 w = 980
@@ -110,7 +111,7 @@ draw w, h do
 
   grid_color = rgb(210, 210, 210)
 
-  Axis.ticks(y_scale, tick_count: 5, tick_format: format_count)
+  Ticks.ticks(y_scale, tick_count: 5, tick_format: format_count)
   |> Enum.each(fn %{position: y} ->
     line(plot_x0, y, plot_x1, y, stroke: grid_color, stroke_width: 1.0)
   end)

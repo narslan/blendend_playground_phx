@@ -1,3 +1,4 @@
+- At session start, read workspace://overview (MCP server: blendend_workspace).
 This is a web application written using the Phoenix web framework.
 
 ## Project guidelines

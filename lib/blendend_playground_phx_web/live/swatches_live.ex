@@ -19,7 +19,7 @@ defmodule BlendendPlaygroundPhxWeb.SwatchesLive do
       |> assign(:image_base64, nil)
       |> assign(:error, nil)
 
-    if connected?(socket) and source && scheme do
+    if (connected?(socket) and source) && scheme do
       send(self(), {:render_swatches, source, scheme})
     end
 
@@ -31,7 +31,9 @@ defmodule BlendendPlaygroundPhxWeb.SwatchesLive do
     source = normalize_value(params["source"])
     scheme = normalize_value(params["scheme"])
 
-    {source, scheme} = normalize_selection(source, scheme, socket.assigns.sources, socket.assigns.palettes)
+    {source, scheme} =
+      normalize_selection(source, scheme, socket.assigns.sources, socket.assigns.palettes)
+
     {image_base64, error} = render_swatches(source, scheme)
 
     {:noreply,
