@@ -133,94 +133,62 @@ defmodule BlendendPlaygroundPhx.Axis do
 
     ticks = ticks(scale, opts)
 
+    tick_draw_opts = %{
+      ticks: ticks,
+      axis_pos: at,
+      tick_size: tick_size,
+      tick_padding: tick_padding,
+      show_ticks?: show_ticks?,
+      show_labels?: show_labels?,
+      font: font,
+      tick_stroke: tick_stroke,
+      tick_width: tick_width,
+      label_fill: label_fill,
+      label_align: label_align,
+      label_dx: label_dx,
+      label_dy: label_dy
+    }
+
     case orientation do
       :bottom ->
         if show_domain? do
           Draw.line(r0, at, r1, at, stroke: axis_stroke, stroke_width: axis_width)
         end
 
-        draw_horizontal_ticks(
-          ticks,
-          at,
-          tick_size,
-          tick_padding,
-          1.0,
-          show_ticks?,
-          show_labels?,
-          font,
-          tick_stroke,
-          tick_width,
-          label_fill,
-          label_align,
-          label_dx,
-          label_dy
-        )
+        tick_draw_opts
+        |> Map.put(:axis, :horizontal)
+        |> Map.put(:dir, 1.0)
+        |> draw_ticks()
 
       :top ->
         if show_domain? do
           Draw.line(r0, at, r1, at, stroke: axis_stroke, stroke_width: axis_width)
         end
 
-        draw_horizontal_ticks(
-          ticks,
-          at,
-          tick_size,
-          tick_padding,
-          -1.0,
-          show_ticks?,
-          show_labels?,
-          font,
-          tick_stroke,
-          tick_width,
-          label_fill,
-          label_align,
-          label_dx,
-          label_dy
-        )
+        tick_draw_opts
+        |> Map.put(:axis, :horizontal)
+        |> Map.put(:dir, -1.0)
+        |> draw_ticks()
 
       :left ->
         if show_domain? do
           Draw.line(at, r0, at, r1, stroke: axis_stroke, stroke_width: axis_width)
         end
 
-        draw_vertical_ticks(
-          ticks,
-          at,
-          tick_size,
-          tick_padding,
-          -1.0,
-          show_ticks?,
-          show_labels?,
-          font,
-          tick_stroke,
-          tick_width,
-          label_fill,
-          label_align,
-          label_dx,
-          label_dy
-        )
+        tick_draw_opts
+        |> Map.put(:axis, :vertical)
+        |> Map.put(:dir, -1.0)
+        |> draw_ticks()
 
       :right ->
         if show_domain? do
           Draw.line(at, r0, at, r1, stroke: axis_stroke, stroke_width: axis_width)
         end
 
-        draw_vertical_ticks(
-          ticks,
-          at,
-          tick_size,
-          tick_padding,
-          1.0,
-          show_ticks?,
-          show_labels?,
-          font,
-          tick_stroke,
-          tick_width,
-          label_fill,
-          label_align,
-          label_dx,
-          label_dy
-        )
+        tick_draw_opts
+        |> Map.put(:axis, :vertical)
+        |> Map.put(:dir, 1.0)
+        |> draw_ticks()
     end
 
     ticks
@@ -231,64 +199,58 @@ defmodule BlendendPlaygroundPhx.Axis do
           "axis orientation must be :bottom | :top | :left | :right, got: #{inspect(orientation)}"
   end
 
-  defp draw_horizontal_ticks(
-         ticks,
-         y,
-         tick_size,
-         tick_padding,
-         dir,
-         show_ticks?,
-         show_labels?,
-         font,
-         tick_stroke,
-         tick_width,
-         label_fill,
-         label_align,
-         label_dx,
-         label_dy
-       ) do
-    Enum.each(ticks, fn %{position: x, label: label} ->
-      if show_ticks? do
-        Draw.line(x, y, x, y + dir * tick_size, stroke: tick_stroke, stroke_width: tick_width)
-      end
+  defp draw_ticks(%{
+         axis: axis,
+         ticks: ticks,
+         axis_pos: axis_pos,
+         tick_size: tick_size,
+         tick_padding: tick_padding,
+         dir: dir,
+         show_ticks?: show_ticks?,
+         show_labels?: show_labels?,
+         font: font,
+         tick_stroke: tick_stroke,
+         tick_width: tick_width,
+         label_fill: label_fill,
+         label_align: label_align,
+         label_dx: label_dx,
+         label_dy: label_dy
+       })
+       when axis in [:horizontal, :vertical] do
+    Enum.each(ticks, fn %{position: pos, label: label} ->
+      case axis do
+        :horizontal ->
+          x = pos
+          y = axis_pos
 
-      if show_labels? do
-        label_x = align_label_x(font, label, x, label_align) + label_dx
-        label_y = y + dir * (tick_size + tick_padding) + label_dy
-        Draw.text(font, label_x, label_y, label, fill: label_fill)
+          if show_ticks? do
+            Draw.line(x, y, x, y + dir * tick_size, stroke: tick_stroke, stroke_width: tick_width)
+          end
+
+          if show_labels? do
+            label_x = align_label_x(font, label, x, label_align) + label_dx
+            label_y = y + dir * (tick_size + tick_padding) + label_dy
+            Draw.text(font, label_x, label_y, label, fill: label_fill)
+          end
+
+        :vertical ->
+          x = axis_pos
+          y = pos
+
+          if show_ticks? do
+            Draw.line(x, y, x + dir * tick_size, y, stroke: tick_stroke, stroke_width: tick_width)
+          end
+
+          if show_labels? do
+            base_x = x + dir * (tick_size + tick_padding)
+            label_x = align_label_x(font, label, base_x, label_align) + label_dx
+            label_y = y + label_dy
+            Draw.text(font, label_x, label_y, label, fill: label_fill)
+          end
       end
     end)
   end
 
-  defp draw_vertical_ticks(
-         ticks,
-         x,
-         tick_size,
-         tick_padding,
-         dir,
-         show_ticks?,
-         show_labels?,
-         font,
-         tick_stroke,
-         tick_width,
-         label_fill,
-         label_align,
-         label_dx,
-         label_dy
-       ) do
-    Enum.each(ticks, fn %{position: y, label: label} ->
-      if show_ticks? do
-        Draw.line(x, y, x + dir * tick_size, y, stroke: tick_stroke, stroke_width: tick_width)
-      end
-
-      if show_labels? do
-        base_x = x + dir * (tick_size + tick_padding)
-        label_x = align_label_x(font, label, base_x, label_align) + label_dx
-        label_y = y + label_dy
-        Draw.text(font, label_x, label_y, label, fill: label_fill)
-      end
-    end)
-  end
 
   defp tick_values(scale, opts) do
     case Keyword.fetch(opts, :tick_values) do

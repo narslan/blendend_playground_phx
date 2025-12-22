@@ -63,6 +63,7 @@ defmodule BlendendPlaygroundPhx.MixProject do
       {:dns_cluster, "~> 0.2.0"},
       {:bandit, "~> 1.5"},
       {:blendend, "~> 0.3"},
+      {:tidewave, "~> 0.5", only: :dev},
       {:scale, github: "narslan/scale"}
     ]
   end
