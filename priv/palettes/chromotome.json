@@ -1583,14 +1583,88 @@
     "source": "artists"
   },
   {
+    "name": "Morgestern",
+    "colors": [
+      "#7c668c",
+      "#b08ba5",
+      "#dfbbc8",
+      "#ffc680",
+      "#ffb178",
+      "#db8872",
+      "#a56457"
+    ],
+    "background": "#FFFACE",
+    "source": "artists"
+  },
+
+  {
     "name": "Nizami",
     "colors": ["#034AA6", "#72B6F2", "#73BFB1", "#F2A30F", "#F26F63"],
     "background": "#FFFACE",
     "source": "artists"
   },
   {
+    "name": "Pissaro",
+    "colors": [
+      "#134130",
+      "#4c825d",
+      "#8cae9e",
+      "#8dc7dc",
+      "#508ca7",
+      "#1a5270",
+      "#0e2a4d"
+    ],
+    "background": "#FFFACE",
+    "source": "artists"
+  },
+  {
+    "name": "Redon",
+    "colors": [
+      "#5b859e",
+      "#1e395f",
+      "#75884b",
+      "#1e5a46",
+      "#df8d71",
+      "#af4f2f",
+      "#d48f90",
+      "#732f30",
+      "#ab84a5",
+      "#59385c",
+      "#d8b847",
+      "#b38711"
+    ],
+    "background": "#FFFACE",
+    "source": "artists"
+  },
+  {
+    "name": "RedonBuddha",
+    "colors": ["#D9D8B6", "#C5742E", "#60B788", "#234C8B", "#85333A"],
+    "background": "#F0E5B9",
+    "source": "artists"
+  },
+
+  {
     "name": "Renoir",
     "colors": ["#303E8C", "#F2AE2E", "#F28705", "#D91414", "#F2F2F2"],
+    "background": "#FFFACE",
+    "source": "artists"
+  },
+  {
+    "name": "Renoir1",
+    "colors": [
+      "#17154f",
+      "#2f357c",
+      "#6c5d9e",
+      "#9d9cd5",
+      "#b0799a",
+      "#f6b3b0",
+      "#e48171",
+      "#bf3729",
+      "#e69b00",
+      "#f5bb50",
+      "#ada43b",
+      "#355828"
+    ],
     "background": "#FFFACE",
     "source": "artists"
   },
@@ -1600,6 +1674,50 @@
     "background": "#FFFACE",
     "source": "artists"
   },
+  {
+    "name": "VanGogh1",
+    "colors": [
+      "#2c2d54",
+      "#434475",
+      "#6b6ca3",
+      "#969bc7",
+      "#87bcbd",
+      "#89ab7c",
+      "#6f9954"
+    ],
+    "background": "#FFFACE",
+    "source": "artists"
+  },
+  {
+    "name": "VanGogh2",
+    "colors": [
+      "#bd3106",
+      "#d9700e",
+      "#e9a00e",
+      "#eebe04",
+      "#5b7314",
+      "#c3d6ce",
+      "#89a6bb",
+      "#454b87"
+    ],
+    "background": "#FFFACE",
+    "source": "artists"
+  },
+  {
+    "name": "Veronese",
+    "colors": [
+      "#67322e",
+      "#99610a",
+      "#c38f16",
+      "#6e948c",
+      "#2c6b67",
+      "#175449",
+      "#122c43"
+    ],
+    "background": "#FFFACE",
+    "source": "artists"
+  },
+
   {
     "name": "Mono",
     "colors": ["#D9D7D8", "#3B5159", "#5D848C", "#7CA2A6", "#262321"],
@@ -1619,33 +1737,92 @@
   },
   {
     "name": "blues",
-    "colors": ["#f7fbff", "#deebf7", "#c6dbef", "#9ecae1", "#6baed6", "#4292c6", "#2171b5", "#08519c", "#08306b"],
+    "colors": [
+      "#f7fbff",
+      "#deebf7",
+      "#c6dbef",
+      "#9ecae1",
+      "#6baed6",
+      "#4292c6",
+      "#2171b5",
+      "#08519c",
+      "#08306b"
+    ],
     "source": "d3"
   },
   {
     "name": "greens",
-    "colors": ["#f7fcf5", "#e5f5e0", "#c7e9c0", "#a1d99b", "#74c476", "#41ab5d", "#238b45", "#006d2c", "#00441b"],
+    "colors": [
+      "#f7fcf5",
+      "#e5f5e0",
+      "#c7e9c0",
+      "#a1d99b",
+      "#74c476",
+      "#41ab5d",
+      "#238b45",
+      "#006d2c",
+      "#00441b"
+    ],
     "source": "d3"
   },
   {
     "name": "grays",
-    "colors": ["#ffffff", "#f0f0f0", "#d9d9d9", "#bdbdbd", "#969696", "#737373", "#525252", "#252525", "#000000"],
+    "colors": [
+      "#ffffff",
+      "#f0f0f0",
+      "#d9d9d9",
+      "#bdbdbd",
+      "#969696",
+      "#737373",
+      "#525252",
+      "#252525",
+      "#000000"
+    ],
     "source": "d3"
   },
   {
     "name": "oranges",
-    "colors": ["#fff5eb", "#fee6ce", "#fdd0a2", "#fdae6b", "#fd8d3c", "#f16913", "#d94801", "#a63603", "#7f2704"],
+    "colors": [
+      "#fff5eb",
+      "#fee6ce",
+      "#fdd0a2",
+      "#fdae6b",
+      "#fd8d3c",
+      "#f16913",
+      "#d94801",
+      "#a63603",
+      "#7f2704"
+    ],
     "source": "d3"
   },
- {
+  {
     "name": "purples",
-    "colors": ["#fcfbfd", "#efedf5", "#dadaeb", "#bcbddc", "#9e9ac8", "#807dba", "#6a51a3", "#54278f", "#3f007d"],
+    "colors": [
+      "#fcfbfd",
+      "#efedf5",
+      "#dadaeb",
+      "#bcbddc",
+      "#9e9ac8",
+      "#807dba",
+      "#6a51a3",
+      "#54278f",
+      "#3f007d"
+    ],
     "source": "d3"
   },
-{
+  {
     "name": "reds",
-    "colors": ["#fff5f0", "#fee0d2", "#fcbba1", "#fc9272", "#fb6a4a", "#ef3b2c", "#cb181d", "#a50f15", "#67000d"],
+    "colors": [
+      "#fff5f0",
+      "#fee0d2",
+      "#fcbba1",
+      "#fc9272",
+      "#fb6a4a",
+      "#ef3b2c",
+      "#cb181d",
+      "#a50f15",
+      "#67000d"
+    ],
     "source": "d3"
   }
 ]
-
