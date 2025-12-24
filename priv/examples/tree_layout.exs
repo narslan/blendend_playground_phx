@@ -2,6 +2,8 @@
 alias BlendendPlaygroundPhx.TreeLayout
 use Blendend.Draw
 
+orientation = :horizontal
+
 tree = %{
   label: "Blendend",
   children: [
@@ -11,11 +13,14 @@ tree = %{
         %{label: "Lines", children: []},
         %{label: "Curves", children: []},
         %{label: "Paths", children: []},
-        %{label: "Transformations", children: [
-        %{label: "Translate", children: []},
-         %{label: "Scale", children: []},
-        %{label: "Rotate", children: []}
-]}
+        %{
+          label: "Transformations",
+          children: [
+            %{label: "Translate", children: []},
+            %{label: "Scale", children: []},
+            %{label: "Rotate", children: []}
+          ]
+        }
       ]
     },
     %{
@@ -37,7 +42,7 @@ tree = %{
   ]
 }
 
-layout = TreeLayout.layout(tree, distance: 1)
+layout = TreeLayout.layout(tree, distance: 1.0, orientation: orientation)
 nodes = layout.nodes
 edges = layout.edges
 node_map = Map.new(nodes, &{&1.id, &1})
@@ -51,16 +56,17 @@ xs = Enum.map(nodes, & &1.x)
 ys = Enum.map(nodes, & &1.y)
 min_x = Enum.min(xs)
 max_x = Enum.max(xs)
+min_y = Enum.min(ys)
 max_y = Enum.max(ys)
 
 tree_width = (max_x - min_x) * spacing_x
-tree_height = max_y * spacing_y
+tree_height = (max_y - min_y) * spacing_y
 
 width = max(1900, (tree_width + padding * 2) |> Float.ceil() |> trunc())
 height = max(1560, (tree_height + padding * 2 + 60) |> Float.ceil() |> trunc())
 
 origin_x = padding + (width - padding * 2 - tree_width) / 2 - min_x * spacing_x
-origin_y = padding + 40
+origin_y = padding + 40 - min_y * spacing_y
 
 point = fn node ->
   {origin_x + node.x * spacing_x, origin_y + node.y * spacing_y}
@@ -72,7 +78,7 @@ draw width, height do
   title_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 20.0)
   label_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
 
-  text(title_font, 32, 36, "Tree layout (Buchheim)", fill: rgb(35, 40, 50))
+  text(title_font, 32, 36, "Tree layout (#{orientation}, Buchheim)", fill: rgb(35, 40, 50))
 
   edge_color = rgb(120, 130, 150, 180)
 

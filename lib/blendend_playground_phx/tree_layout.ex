@@ -4,9 +4,18 @@ defmodule BlendendPlaygroundPhx.TreeLayout do
   C. Buchheim, M. J Unger, and S. Leipert. Improving Walker's algorithm to run in linear time. In Proc. Graph Drawing (GD), 2002
   http://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.16.8757
   The implementation here is a a port of the code at https://llimllib.github.io/pymag-trees/
+
+  ## Options
+
+  - `:distance` - sibling spacing in layout units (default: `1.0`)
+  - `:orientation` - `:vertical` (default) or `:horizontal`
+
+  `:vertical` returns `{x: breadth, y: depth}`.
+  `:horizontal` returns `{x: depth, y: breadth}`.
   """
 
   @type tree :: %{label: term(), children: [tree()]}
+  @type orientation :: :vertical | :horizontal
   @type layout_node :: %{
           id: non_neg_integer(),
           label: term(),
@@ -34,6 +43,11 @@ defmodule BlendendPlaygroundPhx.TreeLayout do
   @spec layout(tree(), keyword()) :: %{nodes: [layout_node()], edges: [edge()]}
   def layout(tree, opts \\ []) do
     distance = Keyword.get(opts, :distance, 1.0)
+    orientation = Keyword.get(opts, :orientation, :vertical)
+
+    if orientation not in [:vertical, :horizontal] do
+      raise ArgumentError, "expected :orientation to be :vertical or :horizontal, got: #{inspect(orientation)}"
+    end
 
     {root_id, nodes} = build_tree(tree)
     nodes = first_walk(nodes, root_id, distance)
@@ -57,12 +71,18 @@ defmodule BlendendPlaygroundPhx.TreeLayout do
       nodes
       |> Map.values()
       |> Enum.map(fn node ->
+        {x, y} =
+          case orientation do
+            :vertical -> {node.x, node.y}
+            :horizontal -> {node.y, node.x}
+          end
+
         %{
           id: node.id,
           label: node.label,
           parent_id: node.parent,
-          x: node.x,
-          y: node.y
+          x: x,
+          y: y
         }
       end)
 
