@@ -3,6 +3,38 @@ defmodule BlendendPlaygroundPhx.Examples do
   Helpers for listing and loading code examples from `priv/examples`.
   """
 
+  @spec format(String.t(), String.t()) :: {:ok, String.t()} | {:error, atom() | String.t()}
+  def format(name, code) when is_binary(name) and is_binary(code) do
+    if name == "custom" or name in all() do
+      path = Path.join(examples_dir(), name <> ".exs")
+
+      formatted =
+        try do
+          code
+          |> Code.format_string!(formatter_opts())
+          |> IO.iodata_to_binary()
+        rescue
+          error in [SyntaxError, TokenMissingError] ->
+            {:error, Exception.message(error)}
+        end
+
+      case formatted do
+        {:error, reason} ->
+          {:error, reason}
+
+        formatted_code ->
+          formatted_code = ensure_trailing_newline(formatted_code)
+
+          case File.write(path, formatted_code) do
+            :ok -> {:ok, formatted_code}
+            {:error, reason} -> {:error, to_string(reason)}
+          end
+      end
+    else
+      {:error, :unknown_example}
+    end
+  end
+
   @spec all() :: [String.t()]
   def all do
     examples_dir()
@@ -74,5 +106,36 @@ defmodule BlendendPlaygroundPhx.Examples do
     |> :code.priv_dir()
     |> to_string()
     |> Path.join("examples")
+  end
+
+  defp formatter_opts do
+    with {:ok, path} <- find_formatter_file(File.cwd!()),
+         {opts, _binding} <- Code.eval_file(path),
+         true <- is_list(opts) do
+      opts
+    else
+      _ -> []
+    end
+  rescue
+    _ -> []
+  end
+
+  defp find_formatter_file(dir) do
+    path = Path.join(dir, ".formatter.exs")
+
+    cond do
+      File.exists?(path) ->
+        {:ok, path}
+
+      Path.dirname(dir) == dir ->
+        :error
+
+      true ->
+        find_formatter_file(Path.dirname(dir))
+    end
+  end
+
+  defp ensure_trailing_newline(code) when is_binary(code) do
+    if String.ends_with?(code, "\n"), do: code, else: code <> "\n"
   end
 end

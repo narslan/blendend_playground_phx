@@ -96,10 +96,11 @@ draw w, h do
   axis_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
   label_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 18.0)
 
-  text(title_font, w/3, 40, "Black cherry trees — height histogram", fill: rgb(24, 24, 28))
-  #text(label_font, 28, 64, "Heights in feet, 5-ft bins", fill: rgb(70, 70, 80))
+  text(title_font, w / 3, 40, "Black cherry trees — height histogram", fill: rgb(24, 24, 28))
+  # text(label_font, 28, 64, "Heights in feet, 5-ft bins", fill: rgb(70, 70, 80))
 
   x_domain = Enum.map(bins, & &1.label)
+
   x_scale =
     Scale.Band.new(
       domain: x_domain,
@@ -107,6 +108,7 @@ draw w, h do
       padding_inner: 0.0,
       padding_outer: 0.0
     )
+
   y_scale = Scale.Linear.new(domain: [0, max_count], range: [plot_y1, plot_y0])
 
   grid_color = rgb(210, 210, 210)
@@ -127,7 +129,9 @@ draw w, h do
     rect(x, y, bar_width, h, fill: bar_fill)
     rect(x, y, bar_width, h, stroke: bar_outline, stroke_width: 1.0)
   end)
- gap = 8.0
+
+  gap = 8.0
+
   Axis.draw(x_scale, :bottom,
     at: plot_y1 + gap,
     font: axis_font,
@@ -145,14 +149,14 @@ draw w, h do
   )
 
   text(label_font, w / 2, plot_y1 + 52, "Height (ft)", fill: rgb(40, 40, 48))
-  
-  transform = matrix do
-    translate 0, h / 2
-    rotate -:math.pi()/2
-  end
-  
+
+  transform =
+    matrix do
+      translate(0, h / 2)
+      rotate(-:math.pi() / 2)
+    end
+
   with_transform transform do
-    text(label_font, plot_x0 - 60, plot_y0 - 18, "Count", fill: rgb(40, 40, 48))  
+    text(label_font, plot_x0 - 60, plot_y0 - 18, "Count", fill: rgb(40, 40, 48))
   end
-  
 end

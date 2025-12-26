@@ -1,12 +1,15 @@
 defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
   use BlendendPlaygroundPhxWeb, :live_view
 
+  @view_modes ~w(split preview)
+
   @impl true
-  def mount(_params, _session, socket) do
+  def mount(params, _session, socket) do
     custom_code = BlendendPlaygroundPhx.Examples.get("custom") || default_code()
     code = custom_code
     examples = BlendendPlaygroundPhx.Examples.all()
     example_options = build_example_options(examples)
+    view_mode = if Map.get(params, "view") in @view_modes, do: params["view"], else: "split"
 
     socket =
       socket
@@ -21,6 +24,7 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
       |> assign(:code, code)
       |> assign(:custom_code, custom_code)
       |> assign(:example, "custom")
+      |> assign(:view_mode, view_mode)
 
     if connected?(socket) do
       send(self(), {:render_code, code})
@@ -47,24 +51,53 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
   end
 
   @impl true
-  def handle_event("save-code", %{"playground" => %{"code" => code}}, socket) do
+  def handle_event("save-code", %{"playground" => %{"code" => code}} = params, socket) do
     example = socket.assigns.example
 
-    socket =
-      socket
-      |> assign(:form, to_form(%{"code" => code, "example" => example}, as: :playground))
-      |> assign(:code, code)
-      |> maybe_assign_custom_code(example, code)
+    case Map.get(params, "action") do
+      "format" ->
+        case BlendendPlaygroundPhx.Examples.format(example, code) do
+          {:ok, formatted_code} ->
+            {image_base64, error, render_ms} = render_code(formatted_code)
 
-    case BlendendPlaygroundPhx.Examples.save(example, code) do
-      :ok ->
-        {:noreply, put_flash(socket, :info, "Updated #{example}.exs")}
+            {:noreply,
+             socket
+             |> assign(
+               :form,
+               to_form(%{"code" => formatted_code, "example" => example}, as: :playground)
+             )
+             |> assign(:submitted?, true)
+             |> assign(:image_base64, image_base64)
+             |> assign(:error, error)
+             |> assign(:render_ms, render_ms)
+             |> assign(:code, formatted_code)
+             |> maybe_assign_custom_code(example, formatted_code)
+             |> put_flash(:info, "Formatted #{example}.exs")}
 
-      {:error, :unknown_example} ->
-        {:noreply, put_flash(socket, :error, "Unknown example selected.")}
+          {:error, :unknown_example} ->
+            {:noreply, put_flash(socket, :error, "Unknown example selected.")}
 
-      {:error, reason} ->
-        {:noreply, put_flash(socket, :error, "Unable to save: #{to_string(reason)}")}
+          {:error, reason} ->
+            {:noreply, put_flash(socket, :error, "Unable to format: #{to_string(reason)}")}
+        end
+
+      _ ->
+        socket =
+          socket
+          |> assign(:form, to_form(%{"code" => code, "example" => example}, as: :playground))
+          |> assign(:code, code)
+          |> maybe_assign_custom_code(example, code)
+
+        case BlendendPlaygroundPhx.Examples.save(example, code) do
+          :ok ->
+            {:noreply, put_flash(socket, :info, "Updated #{example}.exs")}
+
+          {:error, :unknown_example} ->
+            {:noreply, put_flash(socket, :error, "Unknown example selected.")}
+
+          {:error, reason} ->
+            {:noreply, put_flash(socket, :error, "Unable to save: #{to_string(reason)}")}
+        end
     end
   end
 
@@ -110,6 +143,11 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
          |> assign(:save_form, save_form)
          |> put_flash(:error, "Unable to save: #{to_string(reason)}")}
     end
+  end
+
+  @impl true
+  def handle_event("set-view-mode", %{"mode" => mode}, socket) when mode in @view_modes do
+    {:noreply, assign(socket, :view_mode, mode)}
   end
 
   def handle_event("select-example", %{"playground" => %{"example" => name}}, socket) do

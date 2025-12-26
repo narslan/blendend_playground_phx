@@ -46,7 +46,8 @@ defmodule BlendendPlaygroundPhx.TreeLayout do
     orientation = Keyword.get(opts, :orientation, :vertical)
 
     if orientation not in [:vertical, :horizontal] do
-      raise ArgumentError, "expected :orientation to be :vertical or :horizontal, got: #{inspect(orientation)}"
+      raise ArgumentError,
+            "expected :orientation to be :vertical or :horizontal, got: #{inspect(orientation)}"
     end
 
     {root_id, nodes} = build_tree(tree)

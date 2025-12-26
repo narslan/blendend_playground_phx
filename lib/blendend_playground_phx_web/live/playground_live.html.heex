@@ -1,67 +1,140 @@
-<Layouts.app flash={@flash}>
-  <div class="flex flex-wrap items-center justify-between gap-6">
-    <div class="flex flex-wrap items-center gap-4">
-      <p class="text-xs font-semibold uppercase tracking-[0.3em] text-base-content/60">
-        Playground
-      </p>
-      <.form
-        for={@form}
-        id="playground-example-form"
-        phx-change="select-example"
-        class="w-full sm:w-auto"
-      >
-        <.input
-          field={@form[:example]}
-          id="playground-example"
-          type="select"
-          options={@example_options}
-          class="min-w-[220px] rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:focus:border-slate-600 dark:focus:ring-slate-700"
-        />
-      </.form>
-      <.form
-        for={@save_form}
-        id="playground-save-form"
-        phx-submit="save-as"
-        class="flex flex-wrap items-center gap-3"
-      >
-        <.input
-          field={@save_form[:name]}
-          id="playground-save-name"
-          type="text"
-          placeholder="New example name"
-          autocomplete="off"
-          class="min-w-[200px] rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold tracking-[0.2em] text-slate-700 shadow-sm transition placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:ring-slate-700"
-        />
-        <button
-          type="submit"
-          id="playground-save-button"
-          phx-disable-with="Saving..."
-          class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+<Layouts.app flash={@flash} fluid={@view_mode == "preview"}>
+  <div
+    id="playground-topbar"
+    class="flex flex-col gap-6 rounded-2xl border border-slate-200/70 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
+  >
+    <div class="flex flex-wrap items-center justify-between gap-6">
+      <div class="flex flex-wrap items-center gap-4">
+        <p class="text-xs font-semibold uppercase tracking-[0.3em] text-base-content/60">
+          Playground
+        </p>
+        <.form
+          for={@form}
+          id="playground-example-form"
+          phx-change="select-example"
+          class="w-full sm:w-auto"
         >
-          Save to
-        </button>
-      </.form>
+          <.input
+            field={@form[:example]}
+            id="playground-example"
+            type="select"
+            options={@example_options}
+            class="min-w-[220px] rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-800 shadow-sm transition focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:focus:border-slate-600 dark:focus:ring-slate-700"
+          />
+        </.form>
+        <.form
+          for={@save_form}
+          id="playground-save-form"
+          phx-submit="save-as"
+          class="flex flex-wrap items-center gap-3"
+        >
+          <.input
+            field={@save_form[:name]}
+            id="playground-save-name"
+            type="text"
+            placeholder="New example name"
+            autocomplete="off"
+            class="min-w-[200px] rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold tracking-[0.2em] text-slate-700 shadow-sm transition placeholder:text-slate-400 focus:border-slate-400 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-100 dark:placeholder:text-slate-500 dark:focus:border-slate-600 dark:focus:ring-slate-700"
+          />
+          <button
+            type="submit"
+            id="playground-save-button"
+            phx-disable-with="Saving..."
+            class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+          >
+            Save to
+          </button>
+        </.form>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-4">
+        <div
+          id="playground-view-toggle"
+          class="inline-flex items-center rounded-full border border-slate-200 bg-white/90 p-1 shadow-sm dark:border-slate-800 dark:bg-slate-900/70"
+        >
+          <button
+            type="button"
+            id="playground-view-split"
+            phx-click="set-view-mode"
+            phx-value-mode="split"
+            aria-pressed={@view_mode == "split"}
+            class={[
+              "inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition focus:outline-none focus:ring-2 focus:ring-slate-200 dark:focus:ring-slate-700",
+              @view_mode == "split" &&
+                "bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900",
+              @view_mode != "split" &&
+                "text-slate-700 hover:bg-slate-50 dark:text-slate-100/80 dark:hover:bg-slate-950/40"
+            ]}
+          >
+            <.icon name="hero-code-bracket-square" class="size-4 opacity-90" /> Split
+          </button>
+          <button
+            type="button"
+            id="playground-view-preview"
+            phx-click="set-view-mode"
+            phx-value-mode="preview"
+            aria-pressed={@view_mode == "preview"}
+            class={[
+              "inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold uppercase tracking-[0.2em] transition focus:outline-none focus:ring-2 focus:ring-slate-200 dark:focus:ring-slate-700",
+              @view_mode == "preview" &&
+                "bg-slate-900 text-white shadow-sm dark:bg-white dark:text-slate-900",
+              @view_mode != "preview" &&
+                "text-slate-700 hover:bg-slate-50 dark:text-slate-100/80 dark:hover:bg-slate-950/40"
+            ]}
+          >
+            <.icon name="hero-photo" class="size-4 opacity-90" /> Full width
+          </button>
+        </div>
+
+        <p class="text-xs text-base-content/60">
+          Every edit triggers the renderer · {length(@examples)} examples
+        </p>
+      </div>
     </div>
-    <p class="text-xs text-base-content/60">
-      Every edit triggers the renderer · {length(@examples)} examples
-    </p>
   </div>
 
-  <div class="mt-6 grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
-    <div class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40">
+  <div
+    id="playground-layout"
+    class={[
+      "mt-6 grid gap-8",
+      @view_mode == "split" && "lg:grid-cols-[1.2fr_0.8fr]",
+      @view_mode == "preview" && "lg:grid-cols-1"
+    ]}
+  >
+    <div
+      :if={@view_mode == "split"}
+      id="playground-editor-pane"
+      class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
+    >
       <div class="flex items-center justify-between gap-4">
         <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
           Source
         </h2>
-        <button
-          type="submit"
-          form="playground-form"
-          id="playground-update"
-          phx-disable-with="Saving..."
-          class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
-        >
-          Update
-        </button>
+        <div class="flex items-center gap-2">
+          <button
+            type="submit"
+            form="playground-form"
+            id="playground-format"
+            phx-disable-with="Formatting..."
+            name="action"
+            value="format"
+            class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+          >
+            <.icon name="hero-sparkles" class="size-4 opacity-70" /> Format
+          </button>
+
+          <button
+            type="submit"
+            form="playground-form"
+            id="playground-update"
+            phx-disable-with="Saving..."
+            name="action"
+            value="save"
+            class="inline-flex items-center justify-center rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+          >
+            Update
+          </button>
+        </div>
       </div>
 
       <.form
@@ -82,7 +155,10 @@
       </.form>
     </div>
 
-    <div class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40">
+    <div
+      id="playground-preview-pane"
+      class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
+    >
       <div class="flex items-center justify-between gap-4">
         <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
           Preview

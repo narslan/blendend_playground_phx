@@ -27,6 +27,10 @@ defmodule BlendendPlaygroundPhxWeb.Layouts do
   """
   attr :flash, :map, required: true, doc: "the map of flash messages"
 
+  attr :fluid, :boolean,
+    default: false,
+    doc: "when true, the content container spans full width"
+
   attr :current_scope, :map,
     default: nil,
     doc: "the current [scope](https://hexdocs.pm/phoenix/scopes.html)"
@@ -36,7 +40,7 @@ defmodule BlendendPlaygroundPhxWeb.Layouts do
   def app(assigns) do
     ~H"""
     <main class="px-4 pt-4 pb-10 sm:px-6 lg:px-8">
-      <div class="mx-auto max-w-6xl">
+      <div class={["mx-auto", if(@fluid, do: "max-w-none", else: "max-w-6xl")]}>
         {render_slot(@inner_block)}
       </div>
     </main>
