@@ -102,10 +102,16 @@ defmodule BlendendPlaygroundPhx.Examples do
   end
 
   defp examples_dir do
-    :blendend_playground_phx
-    |> :code.priv_dir()
-    |> to_string()
-    |> Path.join("examples")
+    case Application.get_env(:blendend_playground_phx, :examples_dir) do
+      dir when is_binary(dir) and dir != "" ->
+        dir
+
+      _ ->
+        :blendend_playground_phx
+        |> :code.priv_dir()
+        |> to_string()
+        |> Path.join("examples")
+    end
   end
 
   defp formatter_opts do
