@@ -177,6 +177,10 @@ defmodule BlendendPlaygroundPhxWeb.CoreComponents do
   attr :class, :any, default: nil, doc: "the input class to use over defaults"
   attr :error_class, :any, default: nil, doc: "the input error class to use over defaults"
 
+  attr :gutter, :boolean,
+    default: false,
+    doc: "renders a simple line-number gutter (textarea only)"
+
   attr :rest, :global,
     include: ~w(accept autocomplete capture cols disabled form list max maxlength min minlength
                 multiple pattern placeholder readonly required rows size step
@@ -258,15 +262,27 @@ defmodule BlendendPlaygroundPhxWeb.CoreComponents do
     <div class="fieldset mb-2">
       <label>
         <span :if={@label} class="label mb-1">{@label}</span>
-        <textarea
-          id={@id}
-          name={@name}
-          class={[
-            @class || "w-full textarea",
-            @errors != [] && (@error_class || "textarea-error")
-          ]}
-          {@rest}
-        >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
+        <div class="relative">
+          <div
+            :if={@gutter}
+            id={"#{@id}-gutter"}
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-y-0 left-0 w-12 select-none overflow-hidden border-r border-slate-200/70 bg-white/70 px-2 py-3 font-mono text-xs text-slate-500 dark:border-slate-800/60 dark:bg-slate-950/30 dark:text-slate-400"
+          >
+            <div id={"#{@id}-gutter-inner"} class="will-change-transform" />
+          </div>
+
+          <textarea
+            id={@id}
+            name={@name}
+            class={[
+              @class || "w-full textarea",
+              @gutter && "pl-14",
+              @errors != [] && (@error_class || "textarea-error")
+            ]}
+            {@rest}
+          >{Phoenix.HTML.Form.normalize_value("textarea", @value)}</textarea>
+        </div>
       </label>
       <.error :for={msg <- @errors}>{msg}</.error>
     </div>

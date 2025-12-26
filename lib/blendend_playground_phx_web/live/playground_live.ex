@@ -25,6 +25,7 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
       |> assign(:custom_code, custom_code)
       |> assign(:example, "custom")
       |> assign(:view_mode, view_mode)
+      |> assign(:editor_expanded?, false)
 
     if connected?(socket) do
       send(self(), {:render_code, code})
@@ -148,6 +149,11 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
   @impl true
   def handle_event("set-view-mode", %{"mode" => mode}, socket) when mode in @view_modes do
     {:noreply, assign(socket, :view_mode, mode)}
+  end
+
+  @impl true
+  def handle_event("toggle-editor-size", _params, socket) do
+    {:noreply, update(socket, :editor_expanded?, &(!&1))}
   end
 
   def handle_event("select-example", %{"playground" => %{"example" => name}}, socket) do

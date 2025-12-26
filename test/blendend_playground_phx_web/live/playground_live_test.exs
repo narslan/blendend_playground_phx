@@ -9,6 +9,8 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLiveTest do
     assert has_element?(view, "#playground-view-toggle")
     assert has_element?(view, "#playground-editor-pane")
     assert has_element?(view, "#playground-preview-pane")
+    assert has_element?(view, "#playground-editor-toggle-size")
+    assert has_element?(view, "#playground-code-cursor")
 
     _ = view |> element("#playground-view-preview") |> render_click()
 
