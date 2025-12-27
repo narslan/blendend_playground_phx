@@ -10,19 +10,20 @@ defmodule BlendendPlaygroundPhx.FontPreview do
   def render(%{absolute_path: path, family: family, style: style} = variation, opts \\ %{}) do
     text = preview_text(variation, opts)
     size = preview_size(opts)
+    {bg, fg, label_color} = preview_colors(opts)
 
     try do
       draw_result =
         draw @width, @height do
-          clear(fill: rgb(14, 14, 16))
+          clear(fill: bg)
 
           font = load_font(path, size)
           label_font = load_font(path, label_size(size))
 
-          text(font, 36, @height * 0.58, text, fill: rgb(238, 238, 238))
+          text(font, 36, @height * 0.58, text, fill: fg)
 
           meta = "#{family} · #{style}"
-          text(label_font, 36, @height * 0.82, meta, fill: rgb(170, 170, 170))
+          text(label_font, 36, @height * 0.82, meta, fill: label_color)
         end
 
       case draw_result do
@@ -73,6 +74,50 @@ defmodule BlendendPlaygroundPhx.FontPreview do
 
   defp label_size(base_size) when is_number(base_size) do
     min(max(base_size * 0.45, 14.0), 28.0)
+  end
+
+  defp preview_colors(opts) do
+    bg_hex = get_opt(opts, "bg") || "#0E0E10"
+    fg_hex = get_opt(opts, "fg") || "#EEEEEE"
+
+    {br, bg, bb} = parse_hex_rgb(bg_hex, {14, 14, 16})
+    {fr, fg, fb} = parse_hex_rgb(fg_hex, {238, 238, 238})
+
+    bg_color = rgb(br, bg, bb)
+    fg_color = rgb(fr, fg, fb)
+
+    label =
+      rgb(
+        mix_channel(fr, br, 0.45),
+        mix_channel(fg, bg, 0.45),
+        mix_channel(fb, bb, 0.45)
+      )
+
+    {bg_color, fg_color, label}
+  end
+
+  defp get_opt(opts, "bg") when is_map(opts), do: Map.get(opts, "bg") || Map.get(opts, :bg)
+  defp get_opt(opts, "fg") when is_map(opts), do: Map.get(opts, "fg") || Map.get(opts, :fg)
+  defp get_opt(_opts, _key), do: nil
+
+  defp parse_hex_rgb(hex, fallback) when is_binary(hex) do
+    hex = String.trim(hex)
+
+    case hex do
+      <<"#", r::binary-size(2), g::binary-size(2), b::binary-size(2)>> ->
+        {String.to_integer(r, 16), String.to_integer(g, 16), String.to_integer(b, 16)}
+
+      _ ->
+        fallback
+    end
+  rescue
+    _ -> fallback
+  end
+
+  defp parse_hex_rgb(_hex, fallback), do: fallback
+
+  defp mix_channel(a, b, t) when is_number(t) do
+    round(a * (1.0 - t) + b * t)
   end
 
   defp decode_unicode_escapes(text) when is_binary(text) do

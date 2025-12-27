@@ -4,6 +4,8 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
   alias BlendendPlaygroundPhx.{FontPreview, Fonts}
 
   @default_sample "Hamburgefonts . 0123"
+  @default_bg "#0E0E10"
+  @default_fg "#EEEEEE"
 
   @impl true
   def mount(_params, _session, socket) do
@@ -19,6 +21,8 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
       |> assign(:selected_style, selected_style)
       |> assign(:sample_text, @default_sample)
       |> assign(:font_size, 48)
+      |> assign(:bg_hex, @default_bg)
+      |> assign(:fg_hex, @default_fg)
       |> assign(:controls_open?, true)
       |> assign(:preview_base64, nil)
       |> assign(:preview_error, nil)
@@ -27,7 +31,14 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
       |> assign(:list_form, to_form(%{"filter" => ""}, as: :fonts))
       |> assign(
         :preview_form,
-        to_form(%{"text" => @default_sample, "size" => 48, "style" => selected_style},
+        to_form(
+          %{
+            "text" => @default_sample,
+            "size" => 48,
+            "style" => selected_style,
+            "bg" => @default_bg,
+            "fg" => @default_fg
+          },
           as: :preview
         )
       )
@@ -76,7 +87,9 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
              %{
                "text" => socket.assigns.sample_text,
                "size" => socket.assigns.font_size,
-               "style" => style
+               "style" => style,
+               "bg" => socket.assigns.bg_hex,
+               "fg" => socket.assigns.fg_hex
              },
              as: :preview
            )}
@@ -100,14 +113,22 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
     size =
       normalize_int(Map.get(params, "size", socket.assigns.font_size), socket.assigns.font_size)
 
+    bg_hex = normalize_hex_color(Map.get(params, "bg", socket.assigns.bg_hex), @default_bg)
+    fg_hex = normalize_hex_color(Map.get(params, "fg", socket.assigns.fg_hex), @default_fg)
+
     {:noreply,
      socket
      |> assign(:sample_text, text)
      |> assign(:selected_style, style)
      |> assign(:font_size, size)
+     |> assign(:bg_hex, bg_hex)
+     |> assign(:fg_hex, fg_hex)
      |> assign(
        :preview_form,
-       to_form(%{"text" => text, "size" => size, "style" => style}, as: :preview)
+       to_form(
+         %{"text" => text, "size" => size, "style" => style, "bg" => bg_hex, "fg" => fg_hex},
+         as: :preview
+       )
      )
      |> request_preview_render()}
   end
@@ -132,7 +153,9 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
          %{
            "text" => socket.assigns.sample_text,
            "size" => socket.assigns.font_size,
-           "style" => selected_style
+           "style" => selected_style,
+           "bg" => socket.assigns.bg_hex,
+           "fg" => socket.assigns.fg_hex
          },
          as: :preview
        )
@@ -160,7 +183,6 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
 
           {:error, reason} ->
             socket
-            |> assign(:preview_base64, nil)
             |> assign(:preview_error, to_string(reason))
             |> assign(:preview_loading?, false)
         end
@@ -179,7 +201,6 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
       socket
       |> assign(:preview_loading?, true)
       |> assign(:preview_error, nil)
-      |> assign(:preview_base64, nil)
       |> update(:preview_request_id, &(&1 + 1))
 
     request_id = socket.assigns.preview_request_id
@@ -192,7 +213,9 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
              {:ok, variation} <- Fonts.lookup(id, style) do
           FontPreview.render(variation, %{
             "text" => socket.assigns.sample_text,
-            "size" => socket.assigns.font_size
+            "size" => socket.assigns.font_size,
+            "bg" => socket.assigns.bg_hex,
+            "fg" => socket.assigns.fg_hex
           })
         else
           _ -> {:error, "Select a font first"}
@@ -273,4 +296,15 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
   end
 
   defp normalize_int(_val, default), do: default
+
+  defp normalize_hex_color(val, fallback) when is_binary(val) do
+    hex = String.trim(val)
+
+    cond do
+      Regex.match?(~r/^#[0-9A-Fa-f]{6}$/, hex) -> String.upcase(hex)
+      true -> fallback
+    end
+  end
+
+  defp normalize_hex_color(_val, fallback), do: fallback
 end

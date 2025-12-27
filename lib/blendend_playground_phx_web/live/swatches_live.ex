@@ -1,7 +1,7 @@
 defmodule BlendendPlaygroundPhxWeb.SwatchesLive do
   use BlendendPlaygroundPhxWeb, :live_view
 
-  alias BlendendPlaygroundPhx.{Palette, RgbPicker, Swatches}
+  alias BlendendPlaygroundPhx.{Palette, Swatches}
 
   @impl true
   def mount(_params, _session, socket) do
@@ -18,12 +18,6 @@ defmodule BlendendPlaygroundPhxWeb.SwatchesLive do
       |> assign(:form, to_form(%{"source" => source, "scheme" => scheme}, as: :swatches))
       |> assign(:image_base64, nil)
       |> assign(:error, nil)
-      |> assign(:rgb_picker_open?, false)
-      |> assign(:rgb_b, 128)
-      |> assign(:rgb_form, to_form(%{"b" => 128}, as: :rgb))
-      |> assign(:rgb_base64, nil)
-      |> assign(:rgb_error, nil)
-      |> assign(:rgb_picked, nil)
 
     if (connected?(socket) and source) && scheme do
       send(self(), {:render_swatches, source, scheme})
@@ -51,50 +45,9 @@ defmodule BlendendPlaygroundPhxWeb.SwatchesLive do
   end
 
   @impl true
-  def handle_event("toggle-rgb-picker", _params, socket) do
-    open? = !socket.assigns.rgb_picker_open?
-    socket = assign(socket, :rgb_picker_open?, open?)
-
-    socket =
-      if open? do
-        {rgb_base64, rgb_error} = render_rgb_plane(socket.assigns.rgb_b)
-        assign(socket, rgb_base64: rgb_base64, rgb_error: rgb_error)
-      else
-        socket
-      end
-
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_event("rgb-change", %{"rgb" => %{"b" => b}}, socket) do
-    b = normalize_b(b)
-
-    socket =
-      socket
-      |> assign(:rgb_b, b)
-      |> assign(:rgb_form, to_form(%{"b" => b}, as: :rgb))
-
-    socket =
-      if socket.assigns.rgb_picker_open? do
-        {rgb_base64, rgb_error} = render_rgb_plane(b)
-        assign(socket, rgb_base64: rgb_base64, rgb_error: rgb_error)
-      else
-        socket
-      end
-
-    {:noreply, socket}
-  end
-
-  @impl true
   def handle_info({:render_swatches, source, scheme}, socket) do
     {image_base64, error} = render_swatches(source, scheme)
     {:noreply, assign(socket, image_base64: image_base64, error: error)}
-  end
-
-  @impl true
-  def handle_info({:swatches_rgb_picked, %{picked: picked}}, socket) do
-    {:noreply, assign(socket, :rgb_picked, picked)}
   end
 
   defp render_swatches(nil, _scheme), do: {nil, nil}
@@ -150,22 +103,4 @@ defmodule BlendendPlaygroundPhxWeb.SwatchesLive do
   defp normalize_value(nil), do: nil
   defp normalize_value(""), do: nil
   defp normalize_value(value), do: value
-
-  defp normalize_b(val) when is_integer(val), do: min(max(val, 0), 255)
-
-  defp normalize_b(val) when is_binary(val) do
-    case Integer.parse(val) do
-      {int, _} -> normalize_b(int)
-      :error -> 128
-    end
-  end
-
-  defp normalize_b(_), do: 128
-
-  defp render_rgb_plane(b) do
-    case RgbPicker.render_rg_plane(b, 256) do
-      {:ok, base64} -> {base64, nil}
-      {:error, reason} -> {nil, to_string(reason)}
-    end
-  end
 end
