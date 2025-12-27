@@ -47,10 +47,10 @@ nodes = layout.nodes
 edges = layout.edges
 node_map = Map.new(nodes, &{&1.id, &1})
 
-spacing_x = 220.0
+spacing_x = 120.0
 spacing_y = 120.0
-padding = 150.0
-radius = 26.0
+padding = 50.0
+radius = 2.0
 
 xs = Enum.map(nodes, & &1.x)
 ys = Enum.map(nodes, & &1.y)
@@ -62,8 +62,8 @@ max_y = Enum.max(ys)
 tree_width = (max_x - min_x) * spacing_x
 tree_height = (max_y - min_y) * spacing_y
 
-width = max(1900, (tree_width + padding * 2) |> Float.ceil() |> trunc())
-height = max(1560, (tree_height + padding * 2 + 60) |> Float.ceil() |> trunc())
+width = max(1000, (tree_width + padding * 2) |> Float.ceil() |> trunc())
+height = max(1060, (tree_height + padding * 2 + 60) |> Float.ceil() |> trunc())
 
 origin_x = padding + (width - padding * 2 - tree_width) / 2 - min_x * spacing_x
 origin_y = padding + 40 - min_y * spacing_y

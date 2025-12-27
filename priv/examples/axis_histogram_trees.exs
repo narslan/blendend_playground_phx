@@ -90,7 +90,7 @@ format_count = fn value ->
 end
 
 draw w, h do
-  clear(fill: rgb(242, 232, 212))
+  clear(fill: rgb(171, 233, 232))
 
   title_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 28.0)
   axis_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
@@ -118,7 +118,7 @@ draw w, h do
     line(plot_x0, y, plot_x1, y, stroke: grid_color, stroke_width: 1.0)
   end)
 
-  bar_fill = rgb(54, 108, 217)
+  bar_fill = rgb(118, 90, 166)
   bar_outline = rgb(40, 70, 110)
   bar_width = Scale.Band.bandwidth(x_scale)
 
