@@ -35,11 +35,17 @@ defmodule BlendendPlaygroundPhx.FontPreview do
   end
 
   defp preview_text(%{family: family, style: style}, %{"text" => text}) when is_binary(text) do
-    present_or_default(String.trim(text), family, style)
+    text
+    |> String.trim()
+    |> present_or_default(family, style)
+    |> decode_unicode_escapes()
   end
 
   defp preview_text(%{family: family, style: style}, %{text: text}) when is_binary(text) do
-    present_or_default(String.trim(text), family, style)
+    text
+    |> String.trim()
+    |> present_or_default(family, style)
+    |> decode_unicode_escapes()
   end
 
   defp preview_text(%{family: family, style: style}, _opts) do
@@ -67,5 +73,25 @@ defmodule BlendendPlaygroundPhx.FontPreview do
 
   defp label_size(base_size) when is_number(base_size) do
     min(max(base_size * 0.45, 14.0), 28.0)
+  end
+
+  defp decode_unicode_escapes(text) when is_binary(text) do
+    Regex.replace(~r/\\u\{([0-9A-Fa-f]{1,6})\}|\\u([0-9A-Fa-f]{4,6})/, text, fn match,
+                                                                                braced,
+                                                                                plain ->
+      hex = if braced != "", do: braced, else: plain
+
+      with {cp, ""} <- Integer.parse(hex, 16),
+           true <- cp <= 0x10FFFF,
+           false <- cp in 0xD800..0xDFFF do
+        try do
+          <<cp::utf8>>
+        rescue
+          _ -> match
+        end
+      else
+        _ -> match
+      end
+    end)
   end
 end

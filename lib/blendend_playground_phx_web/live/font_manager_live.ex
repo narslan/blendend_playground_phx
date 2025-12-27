@@ -19,6 +19,7 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
       |> assign(:selected_style, selected_style)
       |> assign(:sample_text, @default_sample)
       |> assign(:font_size, 48)
+      |> assign(:controls_open?, true)
       |> assign(:preview_base64, nil)
       |> assign(:preview_error, nil)
       |> assign(:preview_loading?, false)
@@ -132,11 +133,18 @@ defmodule BlendendPlaygroundPhxWeb.FontManagerLive do
            "text" => socket.assigns.sample_text,
            "size" => socket.assigns.font_size,
            "style" => selected_style
-         }, as: :preview)
+         },
+         as: :preview
+       )
      )
      |> assign_selected_font()
      |> assign_style_options()
      |> request_preview_render()}
+  end
+
+  @impl true
+  def handle_event("toggle-controls", _params, socket) do
+    {:noreply, update(socket, :controls_open?, &(!&1))}
   end
 
   @impl true
