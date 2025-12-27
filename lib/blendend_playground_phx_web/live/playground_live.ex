@@ -26,6 +26,8 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
       |> assign(:example, "custom")
       |> assign(:view_mode, view_mode)
       |> assign(:editor_expanded?, false)
+      |> assign(:color_picker_open?, false)
+      |> assign(:picked_color, nil)
 
     if connected?(socket) do
       send(self(), {:render_code, code})
@@ -156,6 +158,18 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
     {:noreply, update(socket, :editor_expanded?, &(!&1))}
   end
 
+  @impl true
+  def handle_event("toggle-color-picker", _params, socket) do
+    open? = !socket.assigns.color_picker_open?
+
+    socket =
+      socket
+      |> assign(:color_picker_open?, open?)
+      |> assign(:picked_color, if(open?, do: socket.assigns.picked_color, else: nil))
+
+    {:noreply, socket}
+  end
+
   def handle_event("select-example", %{"playground" => %{"example" => name}}, socket) do
     {code, example} =
       if name == "custom" do
@@ -187,6 +201,11 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
      |> assign(:image_base64, image_base64)
      |> assign(:error, error)
      |> assign(:render_ms, render_ms)}
+  end
+
+  @impl true
+  def handle_info({:playground_color_picked, %{picked: picked}}, socket) do
+    {:noreply, assign(socket, :picked_color, picked)}
   end
 
   defp render_code(code) do

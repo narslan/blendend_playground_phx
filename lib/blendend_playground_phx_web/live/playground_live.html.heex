@@ -206,11 +206,29 @@
         <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
           Preview
         </h2>
-        <%= if @render_ms && @image_base64 do %>
-          <p id="playground-render-time" class="text-xs text-base-content/60">
-            Render: {@render_ms} ms
-          </p>
-        <% end %>
+        <div class="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            id="playground-toggle-color-picker"
+            phx-click="toggle-color-picker"
+            aria-pressed={@color_picker_open?}
+            class={[
+              "inline-flex items-center justify-center gap-2 rounded-full border px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] shadow-sm transition focus:outline-none focus:ring-2 dark:focus:ring-slate-700",
+              @color_picker_open? &&
+                "border-slate-900 bg-slate-900 text-white hover:bg-slate-800 focus:ring-slate-300 dark:border-white dark:bg-white dark:text-slate-900 dark:hover:bg-slate-100",
+              @color_picker_open? != true &&
+                "border-slate-200 bg-white text-slate-700 hover:border-slate-300 hover:bg-slate-50 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90"
+            ]}
+          >
+            <.icon name="hero-eye-dropper" class="size-4 opacity-70" /> Pick
+          </button>
+
+          <%= if @render_ms && @image_base64 do %>
+            <p id="playground-render-time" class="text-xs text-base-content/60">
+              Render: {@render_ms} ms
+            </p>
+          <% end %>
+        </div>
       </div>
       <div class="mt-5">
         <%= if @submitted? do %>
@@ -221,6 +239,44 @@
                 alt="Rendered preview"
                 class="w-full"
               />
+            </div>
+
+            <div :if={@color_picker_open?} class="mt-5 grid gap-4">
+              <.live_component
+                module={BlendendPlaygroundPhxWeb.BlendendColorPicker}
+                id="playground-preview-picker"
+                label="Pick from preview"
+                png_base64={@image_base64}
+                on_pick={:playground_color_picked}
+              />
+
+              <%= if @picked_color do %>
+                <div
+                  id="playground-picked-color"
+                  class="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-slate-200/70 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/30"
+                >
+                  <div class="flex items-center gap-3">
+                    <div
+                      class="h-10 w-14 rounded-xl border border-slate-200 shadow-sm dark:border-slate-800"
+                      style={"background: rgba(#{elem(@picked_color.rgba, 0)}, #{elem(@picked_color.rgba, 1)}, #{elem(@picked_color.rgba, 2)}, #{elem(@picked_color.rgba, 3) / 255});"}
+                    />
+                    <div class="grid gap-1">
+                      <p class="font-mono text-xs text-slate-700 dark:text-slate-200">
+                        {@picked_color.hex} · rgba{inspect(@picked_color.rgba)}
+                      </p>
+                      <p class="font-mono text-[11px] tracking-[0.1em] text-slate-500 dark:text-slate-400">
+                        rgb({elem(@picked_color.rgba, 0)}, {elem(@picked_color.rgba, 1)}, {elem(
+                          @picked_color.rgba,
+                          2
+                        )})
+                      </p>
+                    </div>
+                  </div>
+                  <p class="font-mono text-[11px] tracking-[0.1em] text-slate-500 dark:text-slate-400">
+                    x={@picked_color.x} y={@picked_color.y}
+                  </p>
+                </div>
+              <% end %>
             </div>
           <% else %>
             <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200">

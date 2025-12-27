@@ -14,6 +14,32 @@ To start your Phoenix server:
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
+## Blendend color picker component
+
+`BlendendPlaygroundPhxWeb.BlendendColorPicker` is a reusable LiveComponent that renders a PNG and lets users click to pick a pixel color server-side via `Blendend.Image.pixel_at!/3`.
+
+Example usage in a LiveView:
+
+```elixir
+<.live_component
+  module={BlendendPlaygroundPhxWeb.BlendendColorPicker}
+  id="picker"
+  label="Pick a color"
+  png_base64={@image_base64}
+  on_pick={:color_picked}
+/>
+```
+
+Handle the selected color in the LiveView:
+
+```elixir
+@impl true
+def handle_info({:color_picked, %{id: _id, picked: picked}}, socket) do
+  # picked = %{x: x, y: y, rgba: {r, g, b, a}, hex: "#RRGGBB"}
+  {:noreply, assign(socket, picked_color: picked)}
+end
+```
+
 
 ## Licenses
 
