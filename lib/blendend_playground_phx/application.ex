@@ -10,9 +10,7 @@ defmodule BlendendPlaygroundPhx.Application do
     :ok = BlendendPlaygroundPhx.Palette.init_cache()
 
     children = [
-      BlendendPlaygroundPhxWeb.Telemetry,
-      {DNSCluster,
-       query: Application.get_env(:blendend_playground_phx, :dns_cluster_query) || :ignore},
+      BlendendPlaygroundPhx.Fonts,
       {Phoenix.PubSub, name: BlendendPlaygroundPhx.PubSub},
       BlendendPlaygroundPhxWeb.Endpoint
     ]

@@ -20,6 +20,7 @@ defmodule BlendendPlaygroundPhxWeb.Router do
     get "/", PageController, :home
     live "/playground", PlaygroundLive, :index
     live "/swatches", SwatchesLive, :index
+    live "/fonts", FontManagerLive, :index
   end
 
   # Other scopes may use custom stacks.
@@ -39,7 +40,7 @@ defmodule BlendendPlaygroundPhxWeb.Router do
     scope "/dev" do
       pipe_through :browser
 
-      live_dashboard "/dashboard", metrics: BlendendPlaygroundPhxWeb.Telemetry
+      live_dashboard "/dashboard"
     end
   end
 end
