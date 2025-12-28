@@ -2,10 +2,11 @@
 # Shapes and centers multiple lines manually using Font metrics and GlyphRun.fill!/5.
 
 alias Blendend.Text.{Face, Font, GlyphBuffer, GlyphRun}
-
-draw 800, 800 do
+width = 1800
+height = 1800
+draw width, height do
     
-  font = load_font "priv/fonts/Alegreya-Regular.otf", 22.0
+  font = load_font "priv/fonts/Alegreya-Regular.otf", 62.0
   fm = Font.metrics!(font)
   canvas = Blendend.Draw.get_canvas()   
     text = """
@@ -16,13 +17,13 @@ draw 800, 800 do
 
     lines = String.split(text, "\n", trim: true)
     num_lines = length(lines)
-    {w, h} = {500, 200}
+    {w, h} = {width * 0.7, height * 0.2}
 
     start_y = (h - num_lines * fm["size"] + fm["ascent"]) / 2.0
   
     line_height = fm["ascent"] + fm["descent"] + fm["line_gap"]
 
-    fill_style = Blendend.Style.Color.rgb!(255, 255, 255)
+    fill_style = Blendend.Style.Color.rgb!(140, 25, 25)
      
     Enum.reduce(lines, start_y, fn line, y ->
 
