@@ -33,10 +33,10 @@ draw width, height do
   base_radius = max(width, height) / 3
 
   # Glyphs for accidentals.
-  sharp = <<0xE262::utf8>>
-  flat = <<0xE260::utf8>>
-  double_flat = <<0xE264::utf8>>
-  double_sharp = <<0xE263::utf8>>
+  sharp = "\uE262"
+  flat = "\uE260"
+  double_flat = "\uE264"
+  double_sharp = "\uE263"
   # Accent ring to frame the key signatures.
   ring_outer = base_radius * 1.5
   ring_inner = base_radius * 0.6
