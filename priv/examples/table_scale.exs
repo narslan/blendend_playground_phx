@@ -1,8 +1,8 @@
 # This is the draft for a table layout. 
 alias BlendendPlaygroundPhx.Palette
 alias BlendendPlaygroundPhx.Gradients
-width = 1500
-height = 1000
+width = 800
+height = 800
 
 draw width, height do
   clear(fill: rgb(0xF8, 0xF8, 0xF8))

@@ -6,7 +6,7 @@ use BlendendPlaygroundPhx.Calculation.Macros
 
 width = 800
 height = 800
-
+    
 draw width, height do
   palette =
     "random"
@@ -16,7 +16,7 @@ draw width, height do
     |> Enum.map(fn {r, g, b} -> rgb(r, g, b) end)
 
   
-  bg = rgb(0x2E, 0x31, 0x38)
+  bg = rgb(0x2A, 0x31, 0x18)  
   clear(fill: bg)
 
   font = load_font("priv/fonts/Alegreya-Regular.otf", 120)
@@ -40,10 +40,10 @@ draw width, height do
     Path.new!()
     |> Font.get_glyph_run_outlines!(font, run, mtx)
 
-  fill_path(p, fill: bg)
-  # shadow_path(p, 10.0, 10.0, 10.0, fill: rgb(0x0,0x0,0x68, 100))
+ # fill_path(p, fill: bg)
+#  shadow_path(p, 10.0, 1.0, 10.0, fill: rgb(0xFF,0xFF,0x68, 100))
 
-  spacing = 10.0
+  spacing = 15.0
   flat = Path.flatten!(p, 0.8)
 
   flat
