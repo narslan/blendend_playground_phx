@@ -62,7 +62,7 @@ draw 800, 800 do
     label_font: label_font
   )
 
-  Gradients.linear_labeled_box_from_scale({x0, y0 + h, x1, y1 + h}, scale_rgb, "Linear RGB",
+  Gradients.linear_labeled_box_from_scale({x0, y0 + h, x1, y1 + h}, scale_rgb, "LinearRGB",
     steps: steps,
     label_font: label_font
   )
@@ -70,7 +70,7 @@ draw 800, 800 do
   Gradients.linear_labeled_box_from_scale(
     {x0, y0 + 2 * h, x1, y1 + 2 * h},
     scale_eased_rgb,
-    "Linear RGB + smootherstep(t)",
+    "LinearRGB + smootherstep",
     steps: steps,
     label_font: label_font
   )
