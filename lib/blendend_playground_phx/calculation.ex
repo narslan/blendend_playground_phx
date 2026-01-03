@@ -85,6 +85,33 @@ defmodule BlendendPlaygroundPhx.Calculation do
   end
 
   @doc """
+  Picks a random integer between `min` and `max` (inclusive of both ends).
+
+  Swaps the arguments if they are provided in reverse order.
+
+  ## Examples
+
+      iex> v = BlendendPlaygroundPhx.Calculation.rand_between_int(3, 5)
+      iex> is_integer(v) and v in 3..5
+      true
+
+      iex> BlendendPlaygroundPhx.Calculation.rand_between_int(7, 7)
+      7
+  """
+  @spec rand_between_int(integer(), integer()) :: integer()
+  def rand_between_int(min, max) when is_integer(min) and is_integer(max) do
+    {low, high} = if min <= max, do: {min, max}, else: {max, min}
+
+    case high - low do
+      0 ->
+        low
+
+      span ->
+        low + :rand.uniform(span + 1) - 1
+    end
+  end
+
+  @doc """
   Generates smooth 2D value noise in the `0.0..1.0` range.
 
   This is a lightweight alternative to Perlin noise: it hashes the surrounding

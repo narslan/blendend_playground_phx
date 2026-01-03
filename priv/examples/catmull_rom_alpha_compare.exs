@@ -20,11 +20,14 @@ points = [
 ]
 
 palette = Palette.palette_by_name("exposito.exposito")
+
 hexes =
-     List.wrap(Map.get(palette, :background, [])) ++ Map.get(palette, :colors, []) 
-rgbs = hexes
- |> Palette.from_hex_list_rgb()
- |> Enum.map(fn {r, g, b} -> rgb(r, g, b) end)
+  List.wrap(Map.get(palette, :background, [])) ++ Map.get(palette, :colors, [])
+
+rgbs =
+  hexes
+  |> Palette.from_hex_list_rgb()
+  |> Enum.map(fn {r, g, b} -> rgb(r, g, b) end)
 
 [bg | palette] = rgbs
 poly_col = Enum.at(palette, 0)

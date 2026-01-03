@@ -13,6 +13,6 @@ draw 600, 600 do
     end
 
   circle(90, 90, 87, fill: grad)
-  
+
   round_rect(97, 97, 150, 150, 20, 20, fill: grad2, comp_op: :difference)
 end

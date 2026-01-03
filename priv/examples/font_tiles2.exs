@@ -13,12 +13,10 @@ design_system = [
     name: "Inochi",
     colors: ["#E60012", "#D2D7DA", "#0068B7", "#FFFFFF"]
   },
-%{ "name": "Nizami",
-    "colors": ["#034AA6", "#72B6F2", "#73BFB1", "#F2A30F", "#F26F63"]},  
-%{
-              
-    "name": "Pissaro",
-    "colors": [
+  %{name: "Nizami", colors: ["#034AA6", "#72B6F2", "#73BFB1", "#F2A30F", "#F26F63"]},
+  %{
+    name: "Pissaro",
+    colors: [
       "#134130",
       "#4c825d",
       "#8cae9e",
@@ -27,7 +25,7 @@ design_system = [
       "#1a5270",
       "#0e2a4d"
     ]
-},     
+  },
   %{
     name: "Umi",
     colors: ["#0068B7", "#31ACE3", "#00A59E", "#C9E0B8", "#A78EC3", "#FFFFFF"]
@@ -169,6 +167,7 @@ draw width, height do
             Enum.each(0..(step - 1), fn i ->
               nx = x + i * cell
               ny = y + j * cell
+
               if :rand.uniform() > 0.98 or cell < min_size do
                 draw_block.(nx + cell / 2, ny + cell / 2, cell)
               else

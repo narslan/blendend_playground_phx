@@ -132,7 +132,7 @@ draw width, height do
     "d "
   ]
 
-  accidental_spacing = line_spacing 
+  accidental_spacing = line_spacing
   clef_x_offset = staff_scale - 10
   key_start_offset = staff_scale * 2
   base_staff_width = 100.0
@@ -238,8 +238,7 @@ draw width, height do
         offset = (line_idx - 2) * line_spacing
         y = offset
 
-        line(staff_left, y, staff_right, y,
-          stroke: staff_color)
+        line(staff_left, y, staff_right, y, stroke: staff_color)
       end)
 
       # G clef.

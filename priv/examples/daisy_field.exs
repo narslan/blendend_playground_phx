@@ -161,7 +161,7 @@ draw width, height do
     w = rand_between(0.08, 0.12) * width
     x = :rand.uniform() * width
     y = :rand.uniform() * height
-    
+
     DaisyField.draw_flower(x, y, w)
   end)
 end

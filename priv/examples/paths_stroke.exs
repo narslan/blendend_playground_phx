@@ -2,7 +2,6 @@
 # Shows filling a path then stroking it with a different comp op for layered outlines.
 
 draw 600, 600 do
-  
   path p do
     move_to(247, 97)
     line_to(247, 172)

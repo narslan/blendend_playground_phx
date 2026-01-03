@@ -2,15 +2,14 @@
 # Transforms them into user space and visualizes per-glyph extents next to the shaped run.
 alias Blendend.Text.{Font, GlyphBuffer, GlyphRun}
 
-font = load_font "priv/fonts/Alegreya-Regular.otf", 80.0 
+font = load_font("priv/fonts/Alegreya-Regular.otf", 80.0)
 text = "blendend"
 
 run =
   GlyphBuffer.new!()
   |> GlyphBuffer.set_utf8_text!(text)
   |> Font.shape!(font)
-  |> GlyphRun.new!
-
+  |> GlyphRun.new!()
 
 glyphs = GlyphRun.inspect_run!(run)
 
@@ -37,10 +36,8 @@ end
 boxes_u =
   Enum.zip(glyphs, boxes_d)
   |> Enum.map_reduce({0.0, 0.0}, fn
-    {{:glyph, _gid, {:advance_offset, {ax, ay}, {px, py}}},
-     {x0_d, y0_d, x1_d, y1_d}},
+    {{:glyph, _gid, {:advance_offset, {ax, ay}, {px, py}}}, {x0_d, y0_d, x1_d, y1_d}},
     {pen_x, pen_y} ->
-
       # design-space origin of this glyph in the run
       origin_x = pen_x + px
       origin_y = pen_y + py
@@ -61,23 +58,23 @@ base_x = 40.0
 base_y = 140.0
 
 draw 600, 220 do
-  clear fill: rgb(20, 20, 20)
+  clear(fill: rgb(20, 20, 20))
 
   c = Blendend.Draw.get_canvas()
 
   # Draw the word
-  GlyphRun.fill!(c, font, base_x, base_y, run,
-    fill: rgb(230, 230, 230)
-  )
+  GlyphRun.fill!(c, font, base_x, base_y, run, fill: rgb(230, 230, 230))
 
   # Draw each glyph's box (now aligned per glyph)
   boxes_u
   |> Enum.each(fn {ux0, uy0, ux1, uy1} ->
-    box base_x + ux0,
-        base_y + uy0,
-        base_x + ux1,
-        base_y + uy1,
-        stroke: Blendend.Style.Color.random(),
-        stroke_width: 1.5
+    box(
+      base_x + ux0,
+      base_y + uy0,
+      base_x + ux1,
+      base_y + uy1,
+      stroke: Blendend.Style.Color.random(),
+      stroke_width: 1.5
+    )
   end)
 end

@@ -15,7 +15,7 @@ defmodule BlendendPlaygroundPhx.Demos.NightHouse do
       if bool do
         translate(w, 0)
         scale(-1, 1)
-      end       
+      end
 
       scl = rand_between(0.75, 1.25)
       scale(scl, 1)
@@ -102,7 +102,7 @@ defmodule BlendendPlaygroundPhx.Demos.NightHouse do
           line_to(0, h)
           close()
         end
-   
+
       fill_path(p4, fill: grad4)
 
       {h5, s5, v5} = Enum.at(palette, -2)

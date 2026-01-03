@@ -5,8 +5,8 @@ h = 600
 
 margin = %{left: 80, right: 40, top: 50, bottom: 70}
 plot_x0 = margin.left
-plot_x1 = w - margin.right 
-plot_y0 = margin.top 
+plot_x1 = w - margin.right
+plot_y0 = margin.top
 plot_y1 = h - margin.bottom
 
 draw w, h do
@@ -19,7 +19,8 @@ draw w, h do
 
   x_scale = Scale.Linear.new(domain: [0, 10], range: [plot_x0, plot_x1])
   y_scale = Scale.Linear.new(domain: [-1, 1], range: [plot_y1, plot_y0])
- x_axis_y = Scale.map(y_scale, 0.0)
+  x_axis_y = Scale.map(y_scale, 0.0)
+
   Axis.draw(x_scale, :bottom,
     at: plot_y1,
     font: axis_font,

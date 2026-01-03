@@ -26,6 +26,7 @@ draw 400, 400 do
 
   translate(100, 100)
   circle_color = Enum.at(palette, 3)
+
   Stream.each(points, fn {x, y} -> circle(x, y, 3, fill: circle_color) end)
   |> Stream.run()
 
@@ -48,5 +49,6 @@ draw 400, 400 do
       elem(p3, 0),
       elem(p3, 1)
     )
+
   stroke_path(curve, stroke: curve_color, stroke_width: 3.5, stroke_cap: :round)
 end

@@ -6,7 +6,7 @@ use BlendendPlaygroundPhx.Calculation.Macros
 
 width = 800
 height = 800
-    
+
 draw width, height do
   palette =
     "random"
@@ -15,8 +15,7 @@ draw width, height do
     |> Palette.from_hex_list_rgb()
     |> Enum.map(fn {r, g, b} -> rgb(r, g, b) end)
 
-  
-  bg = rgb(0x2A, 0x31, 0x18)  
+  bg = rgb(0x2A, 0x31, 0x18)
   clear(fill: bg)
 
   font = load_font("priv/fonts/Alegreya-Regular.otf", 120)
@@ -35,13 +34,13 @@ draw width, height do
       translate(width * 0.1, height * 0.66)
       scale(3.8, 3.8)
     end
-  
+
   p =
     Path.new!()
     |> Font.get_glyph_run_outlines!(font, run, mtx)
 
- # fill_path(p, fill: bg)
-#  shadow_path(p, 10.0, 1.0, 10.0, fill: rgb(0xFF,0xFF,0x68, 100))
+  # fill_path(p, fill: bg)
+  #  shadow_path(p, 10.0, 1.0, 10.0, fill: rgb(0xFF,0xFF,0x68, 100))
 
   spacing = 15.0
   flat = Path.flatten!(p, 0.8)
@@ -75,7 +74,8 @@ draw width, height do
     stroke_path(path_flare,
       stroke: col,
       stroke_width: rand_between(1.2, 1.6),
-      stroke_cap: :round)
+      stroke_cap: :round
+    )
 
     # occasional blossom along the flare
     if :rand.uniform() < 0.6 do

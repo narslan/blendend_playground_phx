@@ -60,6 +60,12 @@ defmodule BlendendPlaygroundPhx.Calculation.Macros do
     end
   end
 
+  defmacro rand_between_int(min, max) do
+    quote bind_quoted: [min: min, max: max] do
+      Calculation.rand_between_int(min, max)
+    end
+  end
+
   defmacro dist(p1, p2) do
     quote bind_quoted: [p1: p1, p2: p2] do
       Calculation.dist(p1, p2)

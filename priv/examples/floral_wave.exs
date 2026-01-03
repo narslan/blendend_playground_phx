@@ -31,7 +31,6 @@ defmodule BlendendPlaygroundPhx.Demos.FloralWave do
     "264653-2a9d8f-e9c46a-f4a261-e76f51"
   ]
 
-
   def pick_palette do
     Enum.random(@palettes)
     |> String.split("-")
@@ -46,17 +45,19 @@ defmodule BlendendPlaygroundPhx.Demos.FloralWave do
 
   defp draw_flower(x, y, r_max, r_step, colors, base) do
     translate x, y do
-     
-        Enum.reduce_while(
-          Stream.iterate(r_max, &(&1 - r_step)), 0,
-          fn r, idx ->
-          if r <= r_max / 5, 
-            do: {:halt, idx}, 
+      Enum.reduce_while(
+        Stream.iterate(r_max, &(&1 - r_step)),
+        0,
+        fn r, idx ->
+          if r <= r_max / 5,
+            do: {:halt, idx},
             else: {:cont, petal_ring(r, r_max, colors, idx)}
-        end)
-      #most inner circle
+        end
+      )
+
+      # most inner circle
       circle(0.0, 0.0, r_max / 5, fill: base)
-      circle(0.0, 0.0, r_max / 5, stroke: rgb(0,0,0,200))
+      circle(0.0, 0.0, r_max / 5, stroke: rgb(0, 0, 0, 200))
     end
   end
 
@@ -76,39 +77,38 @@ defmodule BlendendPlaygroundPhx.Demos.FloralWave do
       d = :math.sqrt(:math.pow(x1 - x2, 2) + :math.pow(y1 - y2, 2))
 
       petal_color = Enum.at(colors, rem(acc, 2))
-      petal_arc(x, y, d , petal_color)
+      petal_arc(x, y, d, petal_color)
       acc + 1
     end)
   end
 
-  defp petal_arc(cx, cy, r,  color) do
-    #steps = 16
-    start_angle = :math.atan2(cy , cx) - :math.pi() / 2
-    end_angle = :math.atan2(cy , cx) + :math.pi() / 2
+  defp petal_arc(cx, cy, r, color) do
+    # steps = 16
+    start_angle = :math.atan2(cy, cx) - :math.pi() / 2
+    end_angle = :math.atan2(cy, cx) + :math.pi() / 2
     step = :math.pi() / 180
 
-    points = Stream.iterate(start_angle, &(&1 + step))
-    |> Stream.take_while(&(&1 <= end_angle))
-    |> Enum.map(fn angle -> 
-      {cx + :math.cos(angle) * r / 2, cy + :math.sin(angle) * r / 2 }
-    end)
+    points =
+      Stream.iterate(start_angle, &(&1 + step))
+      |> Stream.take_while(&(&1 <= end_angle))
+      |> Enum.map(fn angle ->
+        {cx + :math.cos(angle) * r / 2, cy + :math.sin(angle) * r / 2}
+      end)
 
     polygon([{0.0, 0.0} | points], fill: color)
-    polyline([{0.0, 0.0} | points], stroke: rgb(0,0,0))
+    polyline([{0.0, 0.0} | points], stroke: rgb(0, 0, 0))
   end
 
   def layer_circle(x, y, d, palette) do
-    
-    
     [base | petal_colors] = Enum.shuffle(palette)
-   
+
     base_r = d / 2
 
     # subtle shadow/glow: lighter alpha and smaller blur radius
     blur_path(circle_path(x, y, base_r), base_r / 7,
-      mode: :fill, 
-      fill: rgb(0, 0, 0, 100), 
-      padding: base_r / 2 
+      mode: :fill,
+      fill: rgb(0, 0, 0, 100),
+      padding: base_r / 2
     )
 
     # keep base disc crisp on top of the blur
