@@ -207,6 +207,15 @@
           Preview
         </h2>
         <div class="flex flex-wrap items-center gap-3">
+          <button
+            type="button"
+            id="playground-render"
+            phx-click="render"
+            phx-disable-with="Rendering..."
+            class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+          >
+            <.icon name="hero-arrow-path" class="size-4 opacity-70" /> Render
+          </button>
           <%= if @render_ms && @image_base64 do %>
             <p id="playground-render-time" class="text-xs text-base-content/60">
               Render: {@render_ms} ms
@@ -219,13 +228,17 @@
           <%= if @image_base64 do %>
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
               <img
+                id="playground-render-image"
                 src={"data:image/png;base64," <> @image_base64}
                 alt="Rendered preview"
                 class="w-full"
               />
             </div>
           <% else %>
-            <div class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200">
+            <div
+              id="playground-render-error"
+              class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200"
+            >
               <p class="font-semibold">Render failed</p>
               <p class="mt-2 whitespace-pre-wrap text-xs leading-relaxed">{@error}</p>
             </div>

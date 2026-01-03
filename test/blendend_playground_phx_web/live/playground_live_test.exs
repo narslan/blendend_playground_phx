@@ -44,4 +44,16 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLiveTest do
     assert has_element?(view, "#playground-code", "420, 240")
     assert has_element?(view, "#playground-code", "242, 230, 216")
   end
+
+  test "can trigger a render without editing", %{conn: conn} do
+    {:ok, view, _html} = live(conn, ~p"/playground")
+
+    assert has_element?(view, "#playground-render")
+
+    _ = view |> element("#playground-render") |> render_click()
+    _ = :sys.get_state(view.pid)
+
+    assert has_element?(view, "#playground-render-image") or
+             has_element?(view, "#playground-render-error")
+  end
 end

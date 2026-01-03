@@ -52,6 +52,12 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
   end
 
   @impl true
+  def handle_event("render", _params, socket) do
+    send(self(), {:render_code, socket.assigns.code})
+    {:noreply, socket}
+  end
+
+  @impl true
   def handle_event("save-code", %{"playground" => %{"code" => code}} = params, socket) do
     example = socket.assigns.example
 
