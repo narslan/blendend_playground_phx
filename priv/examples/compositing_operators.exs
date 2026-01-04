@@ -1,7 +1,9 @@
 # Compositing operator demo / mini tutorial.
 #
-# Each tile draws the same destination (blue circle) and source (rose square).
+# Each tile draws the same destination (circle) and source (square).
 # The source square is drawn with `comp_op: ...` so you can compare how each operator blends.
+
+alias BlendendPlaygroundPhx.Tiler
 
 operators = [
   :src_over,
@@ -67,44 +69,60 @@ cols = 6
 rows = Integer.ceil_div(length(operators), cols)
 
 tile_w = 210
-tile_h = 210
-gap = 38
+tile_h = 170
+gap = 18
 
 pad_x = 34
-header_h = 188
+header_h = 88
 pad_bottom = 34
 
-swatch_w = 240
+swatch_w = 320
 swatch_gap = 22
 
-w = pad_x * 2 + cols * tile_w + (cols - 1) * gap + swatch_gap + swatch_w
-h = header_h + pad_bottom + rows * tile_h + (rows - 1) * gap 
+grid_inner_w = cols * tile_w + (cols - 1) * gap
+grid_inner_h = rows * tile_h + (rows - 1) * gap
 
-scheme = palette("artists.Cross")
-  dest = scheme |> hell() |> alpha(120)
-src = scheme |> palette_at(1) |> alpha(240)
+grid_w = pad_x * 2 + grid_inner_w
+w = grid_w + swatch_gap + swatch_w
+h = header_h + pad_bottom + grid_inner_h
+
+scheme = palette("artists.VanGogh")
+
+bg = palette_named(scheme, :background) || rgb(244, 246, 250)
+ink = scheme |> palette_at(4) |> alpha(255)
+
+dest = scheme |> palette_at(1) |> alpha(220)
+src = scheme |> palette_at(3) |> alpha(210)
+
+tiler =
+  Tiler.grid(rows, cols, {pad_x, header_h, grid_inner_w, grid_inner_h},
+    x_padding_inner: gap / (tile_w + gap),
+    y_padding_inner: gap / (tile_h + gap),
+    padding_outer: 0.0
+  )
 
 draw w, h do
-  clear(fill: hsv(65, 0.1, 0.8))
+  clear(fill: bg)
 
-  title_font = font("AlegreyaSans", 80.0, "Bold")
-  subtitle_font = font("AlegreyaSans", 28.0, "Black")
-  desc_font = font("AlegreyaSans", 32.0)
-  label_font = font("MapleMono", 32.0)
-  swatch_font = font("MapleMono", 18.0)
+  title_font = font("AlegreyaSans", 30.0)
+  subtitle_font = font("AlegreyaSans", 14.0)
+  desc_font = font("AlegreyaSans", 12.0)
+  label_font = font("MapleMono", 12.0)
 
-  text(title_font, pad_x + 400, 120, "Compositing operators", fill: scheme |> palette_at(1))
+  text(title_font, pad_x, 44, "Compositing operators", fill: ink)
 
+  text(subtitle_font, pad_x, 68, "Ziel (Kreis) + Quelle (Quadrat mit comp_op)", fill: ink)
 
-  line(pad_x, 78, w - pad_x, 78, stroke: rgb(203, 213, 225), stroke_width: 1.0)
+  line(pad_x, 78, grid_w - pad_x, 78, stroke: alpha(ink, 180), stroke_width: 1.0)
 
   debug_palette_swatch(scheme,
-    at: {w - pad_x - swatch_w, header_h},
+    at: {grid_w + swatch_gap, header_h},
     width: swatch_w,
     max: 12,
     chip: 14,
     gap: 6,
-    font: swatch_font,
+    font: label_font,
+    show_hsv: true,
     highlights: [0, 3]
   )
 
@@ -114,26 +132,25 @@ draw w, h do
     col = rem(idx, cols)
     row = div(idx, cols)
 
-    x0 = pad_x + col * (tile_w + gap)
-    y0 = header_h + row * (tile_h + gap)
+    cell = Tiler.cell!(tiler, row, col)
 
-    translate x0, y0 do
-      round_rect(0, 0, tile_w, tile_h, 18, 18,
-        fill: rgb(255, 255, 255, 240),
-        stroke: rgb(203, 213, 225),
-        stroke_width: 1.0
+    translate cell.x, cell.y do
+      round_rect(0, 0, cell.w, cell.h, 18, 18,
+
+        stroke: scheme.stroke,
+        stroke_width: 2.0
       )
 
       op_label = ":" <> Atom.to_string(op)
       desc = Map.get(descriptions, op, "")
 
-      text(label_font, 10, 24, op_label, fill: rgb(30, 41, 59))
-      text(desc_font, 10, 52, desc, fill: scheme.stroke)
+      text(label_font, 16, 24, op_label, fill: ink)
+      text(desc_font, 16, 42, desc, fill: alpha(ink, 190))
 
       content_x = 16
-      content_y = 64
-      content_w = tile_w - 32
-      content_h = tile_h - 70
+      content_y = 54
+      content_w = cell.w - 32
+      content_h = cell.h - 70
 
       bg_cols = trunc(content_w / checker)
       bg_rows = trunc(content_h / checker)
@@ -141,20 +158,18 @@ draw w, h do
       for j <- 0..bg_rows, i <- 0..bg_cols do
         fill =
           if rem(i + j, 2) == 0 do
-            rgb(248, 250, 252)
+            rgb(0, 0, 52)
           else
-            rgb(226, 232, 240)
+            rgb(0, 0, 240)
           end
 
         rect(content_x + i * checker, content_y + j * checker, checker, checker, fill: fill)
       end
 
-      # Destination (blue) first.
       dx = content_x + content_w * 0.42
       dy = content_y + content_h * 0.58
       circle(dx, dy, content_w * 0.26, fill: dest)
 
-      # Source (rose) on top, blended via `comp_op`.
       sx = content_x + content_w * 0.64
       sy = content_y + content_h * 0.42
 

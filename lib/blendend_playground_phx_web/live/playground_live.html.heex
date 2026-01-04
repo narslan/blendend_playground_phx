@@ -1,9 +1,9 @@
 <Layouts.app flash={@flash} fluid={@view_mode == "preview"}>
   <div
     id="playground-topbar"
-    class="flex flex-col gap-6 rounded-2xl border border-slate-200/70 bg-white/70 p-5 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
+    class="flex flex-col gap-4 rounded-2xl border border-slate-200/70 bg-white/70 p-4 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
   >
-    <div class="flex flex-wrap items-center justify-between gap-6">
+    <div class="flex flex-wrap items-center justify-between gap-4">
       <div class="flex flex-wrap items-center gap-4">
         <p class="text-xs font-semibold uppercase tracking-[0.3em] text-base-content/60">
           Playground
@@ -96,15 +96,15 @@
   <div
     id="playground-layout"
     class={[
-      "mt-6 grid gap-8",
-      @view_mode == "split" && "lg:grid-cols-[1.2fr_0.8fr]",
+      "mt-4 grid gap-6",
+      @view_mode == "split" && "lg:grid-cols-[0.9fr_1.1fr]",
       @view_mode == "preview" && "lg:grid-cols-1"
     ]}
   >
     <div
       :if={@view_mode == "split"}
       id="playground-editor-pane"
-      class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
+      class="rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
     >
       <div class="flex items-center justify-between gap-4">
         <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
@@ -163,7 +163,7 @@
         id="playground-form"
         phx-change="code-change"
         phx-submit="save-code"
-        class="mt-5 grid gap-4"
+        class="mt-4 grid gap-3"
       >
         <.input
           field={@form[:code]}
@@ -176,7 +176,7 @@
           data-indent="2"
           data-cursor-id="playground-code-cursor"
           class={[
-            "w-full rounded-xl border bg-gradient-to-b px-4 py-3 font-mono text-sm leading-6 shadow-sm transition focus:outline-none focus:ring-2",
+            "w-full rounded-xl border bg-gradient-to-b px-3 py-2.5 font-mono text-[13px] leading-5 shadow-sm transition focus:outline-none focus:ring-2",
             @editor_expanded? && "min-h-[70vh]",
             @editor_expanded? != true && "min-h-[360px]",
             "border-slate-200 from-slate-50 to-white text-slate-900 caret-slate-900 selection:bg-slate-900/10 focus:border-slate-400 focus:ring-slate-200",
@@ -184,7 +184,7 @@
           ]}
         />
 
-        <div class="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-200/70 bg-white/60 px-4 py-2 text-xs text-slate-600 shadow-sm dark:border-slate-800/60 dark:bg-slate-950/30 dark:text-slate-300">
+        <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-200/70 bg-white/60 px-3 py-2 text-xs text-slate-600 shadow-sm dark:border-slate-800/60 dark:bg-slate-950/30 dark:text-slate-300">
           <p class="font-mono text-[11px] tracking-[0.1em]">
             Tab/Shift+Tab indent · Ctrl/Cmd+S save · Ctrl/Cmd+Shift+Enter format
           </p>
@@ -200,7 +200,7 @@
 
     <div
       id="playground-preview-pane"
-      class="rounded-2xl border border-slate-200/70 bg-white/80 p-6 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
+      class="rounded-2xl border border-slate-200/70 bg-white/80 p-5 shadow-sm backdrop-blur dark:border-slate-800/60 dark:bg-slate-950/40"
     >
       <div class="flex items-center justify-between gap-4">
         <h2 class="text-sm font-semibold uppercase tracking-[0.2em] text-base-content/60">
@@ -223,7 +223,7 @@
           <% end %>
         </div>
       </div>
-      <div class="mt-5">
+      <div class="mt-4">
         <%= if @submitted? do %>
           <%= if @image_base64 do %>
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/60">

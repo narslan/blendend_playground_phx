@@ -106,6 +106,7 @@ defmodule BlendendPlaygroundPhx.PaletteDSL do
     - `:font` a font for labels (optional)
     - `:title` title string (optional)
     - `:highlights` list of indices to outline (optional)
+    - `:show_hsv` show HSV values next to hex (default: false)
   """
   def debug_palette_swatch(%Scheme{} = scheme, opts) when is_list(opts) do
     {x, y} = Keyword.fetch!(opts, :at)
@@ -115,6 +116,7 @@ defmodule BlendendPlaygroundPhx.PaletteDSL do
     gap = Keyword.get(opts, :gap, 8) * 1.0
     font = Keyword.get(opts, :font)
     highlights = Keyword.get(opts, :highlights, [])
+    show_hsv? = Keyword.get(opts, :show_hsv, false)
 
     title =
       Keyword.get_lazy(opts, :title, fn ->
@@ -157,12 +159,31 @@ defmodule BlendendPlaygroundPhx.PaletteDSL do
       end
 
       if font do
-        text(font, text_x, cy + chip - 2.0, hex, fill: rgb(100, 116, 139))
+        label = if show_hsv?, do: hsv_label(hex), else: to_string(hex)
+        text(font, text_x, cy + chip - 2.0, label, fill: rgb(100, 116, 139))
       end
     end)
 
     :ok
   end
+
+  defp hsv_label(hex) when is_binary(hex) do
+    case String.trim(hex) do
+      <<"#", _::binary-size(6)>> = hex ->
+        {h, s, v} = Palette.hex_to_hsv(hex)
+        h = round(h)
+        s = :erlang.float_to_binary(s, decimals: 2)
+        v = :erlang.float_to_binary(v, decimals: 2)
+        "#{hex} · hsv #{h}, #{s}, #{v}"
+
+      other ->
+        other
+    end
+  rescue
+    _ -> to_string(hex)
+  end
+
+  defp hsv_label(other), do: to_string(other)
 
   defp extract_colors(%Scheme{colors: colors}) when is_list(colors), do: colors
   defp extract_colors(%{colors: colors}) when is_list(colors), do: colors
