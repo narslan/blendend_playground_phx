@@ -75,8 +75,8 @@ end
 draw width, height do
   clear(fill: rgb(244, 244, 239))
 
-  title_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 20.0)
-  label_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
+  title_font = font("AlegreyaSans", 20.0)
+  label_font = font("MapleMono", 12.0)
 
   text(title_font, 32, 36, "Tree layout (#{orientation}, Buchheim)", fill: rgb(35, 40, 50))
 

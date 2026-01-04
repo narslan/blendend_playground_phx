@@ -43,8 +43,8 @@ defmodule BlendendPlaygroundPhx.Demos.FloralWave do
       x = (x1 + x2) / 2
       y = (y1 + y2) / 2
       d = :math.sqrt(:math.pow(x1 - x2, 2) + :math.pow(y1 - y2, 2))
-          
-      petal_color = Enum.at(colors, rem(acc, 2))       
+
+      petal_color = Enum.at(colors, rem(acc, 2))
       petal_arc(x, y, d, petal_color)
       acc + 1
     end)

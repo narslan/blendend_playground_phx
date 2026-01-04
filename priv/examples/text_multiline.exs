@@ -6,7 +6,7 @@ width = 1800
 height = 1800
 
 draw width, height do
-  font = load_font("priv/fonts/Alegreya-Regular.otf", 62.0)
+  font = font("Alegreya", 62.0)
   fm = Font.metrics!(font)
   canvas = Blendend.Draw.get_canvas()
 

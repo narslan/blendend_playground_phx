@@ -20,8 +20,8 @@ defmodule BlendendPlaygroundPhx.Axis do
 
       draw w, h do
         clear(fill: rgb(248, 248, 248))
-        title_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 26.0)
-        axis_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
+        title_font = font("AlegreyaSans", 26.0)
+        axis_font = font("MapleMono", 12.0)
 
         text(title_font, 24, 36, "Axis playground", fill: rgb(30, 30, 40))
 

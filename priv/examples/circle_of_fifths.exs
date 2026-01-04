@@ -14,9 +14,9 @@ draw width, height do
   clear(fill: rgb(250, 250, 250, 250))
 
   music_font_size = 60
-  music_font = load_font("priv/fonts/BravuraText.otf", music_font_size)
+  music_font = font("BravuraText", music_font_size)
   label_font_size = 60.0
-  label_font = load_font("priv/fonts/Alegreya-Regular.otf", label_font_size)
+  label_font = font("Alegreya", label_font_size)
 
   staff_scale = 24.0
   line_spacing = staff_scale * 0.8

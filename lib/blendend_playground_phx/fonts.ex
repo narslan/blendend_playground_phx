@@ -35,6 +35,8 @@ defmodule BlendendPlaygroundPhx.Fonts do
   Fetch a family by slug or family name.
   """
   def get(id) when is_binary(id) do
+    ensure_table()
+
     case :ets.lookup(@table, {:family, normalize_id(id)}) do
       [{{:family, _}, font}] -> {:ok, font}
       [] -> {:error, :not_found}
@@ -51,6 +53,18 @@ defmodule BlendendPlaygroundPhx.Fonts do
       {:ok, variation}
     else
       _ -> {:error, :not_found}
+    end
+  end
+
+  @doc """
+  Lookup a font face by its ID (derived from the file name, e.g. `maplemono-regular`).
+  """
+  def face(id) when is_binary(id) do
+    ensure_table()
+
+    case :ets.lookup(@table, {:face, normalize_id(id)}) do
+      [{{:face, _}, face}] -> {:ok, face}
+      [] -> {:error, :not_found}
     end
   end
 
@@ -97,6 +111,10 @@ defmodule BlendendPlaygroundPhx.Fonts do
       [priv_fonts | extra_paths]
       |> Enum.flat_map(&list_font_files/1)
       |> Enum.map(&build_face(&1, priv_fonts))
+
+    Enum.each(faces, fn face ->
+      :ets.insert(table, {{:face, face.id}, face})
+    end)
 
     faces
     |> Enum.group_by(& &1.family)

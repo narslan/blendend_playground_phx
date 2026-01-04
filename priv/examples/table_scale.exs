@@ -6,7 +6,7 @@ height = 800
 
 draw width, height do
   clear(fill: rgb(0xF8, 0xF8, 0xF8))
-  font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 30.0)
+  font = font("AlegreyaSans", 30.0)
   text(font, 22, 34, "Tables and Scales", fill: rgb(0, 0, 36))
 
   data = [

@@ -1,6 +1,6 @@
 defmodule BlendendPlaygroundPhx.Palette.Scheme do
   @enforce_keys [:name, :colors]
-  defstruct [:name, :colors, :stroke, :background, :source]
+  defstruct [:name, :colors, :stroke, :background, :source, :categories]
 end
 
 defmodule BlendendPlaygroundPhx.Palette do
@@ -344,13 +344,16 @@ defmodule BlendendPlaygroundPhx.Palette do
         name = Map.get(m, "name", "palette_#{System.unique_integer([:positive])}")
         source = Map.get(m, "source", default_source)
 
+        categories = extract_categories(m)
+
         [
           %Scheme{
             name: name,
             colors: colors,
             background: Map.get(m, "background"),
             stroke: Map.get(m, "stroke"),
-            source: source
+            source: source,
+            categories: categories
           }
         ]
 
@@ -368,18 +371,22 @@ defmodule BlendendPlaygroundPhx.Palette do
             %Scheme{
               name: to_string(name),
               colors: value,
-              source: default_source
+              source: default_source,
+              categories: %{}
             }
           ]
 
         is_map(value) ->
+          categories = extract_categories(value)
+
           [
             %Scheme{
               name: to_string(name),
               colors: Map.get(value, "colors", []),
               background: Map.get(value, "background"),
               stroke: Map.get(value, "stroke"),
-              source: Map.get(value, "source", default_source)
+              source: Map.get(value, "source", default_source),
+              categories: categories
             }
           ]
 
@@ -390,4 +397,63 @@ defmodule BlendendPlaygroundPhx.Palette do
   end
 
   defp normalize_palettes(_data, _default_source), do: []
+
+  defp extract_categories(map) when is_map(map) do
+    direct =
+      map
+      |> Enum.reduce(%{}, fn
+        {"name", _}, acc ->
+          acc
+
+        {"source", _}, acc ->
+          acc
+
+        {"colors", _}, acc ->
+          acc
+
+        {"background", _}, acc ->
+          acc
+
+        {"stroke", _}, acc ->
+          acc
+
+        {"categories", _}, acc ->
+          acc
+
+        {key, value}, acc ->
+          if hex_color?(value) do
+            Map.put(acc, to_string(key), value)
+          else
+            acc
+          end
+      end)
+
+    nested =
+      case Map.get(map, "categories") do
+        m when is_map(m) -> Enum.into(m, %{}, fn {k, v} -> {to_string(k), v} end)
+        _ -> %{}
+      end
+      |> Enum.reduce(%{}, fn {k, v}, acc ->
+        if hex_color?(v), do: Map.put(acc, k, v), else: acc
+      end)
+
+    direct
+    |> Map.merge(nested)
+    |> Map.merge(%{
+      "background" => Map.get(map, "background"),
+      "stroke" => Map.get(map, "stroke")
+    })
+    |> Enum.reduce(%{}, fn
+      {_k, nil}, acc -> acc
+      {k, v}, acc -> Map.put(acc, k, v)
+    end)
+  end
+
+  defp extract_categories(_), do: %{}
+
+  defp hex_color?(<<"#", hex::binary-size(6)>>) do
+    String.match?(hex, ~r/^[0-9A-Fa-f]{6}$/)
+  end
+
+  defp hex_color?(_), do: false
 end

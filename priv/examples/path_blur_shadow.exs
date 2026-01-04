@@ -1,7 +1,7 @@
 # Shape-aware blur + shadow demo (Blendend.Effects.blur_path/4).
 draw 720, 420 do
   clear(fill: rgb(100, 14, 18))
-  font = load_font("priv/fonts/Alegreya-Regular.otf", 16.0)
+  font = font("Alegreya", 16.0)
 
   path ring do
     add_circle(220, 210, 96.0)

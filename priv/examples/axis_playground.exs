@@ -12,8 +12,8 @@ plot_y1 = h - margin.bottom
 draw w, h do
   clear(fill: rgb(231, 232, 216))
 
-  title_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 26.0)
-  axis_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
+  title_font = font("AlegreyaSans", 26.0)
+  axis_font = font("MapleMono", 12.0)
 
   text(title_font, 24, 36, "Axis playground", fill: rgb(30, 30, 40))
 

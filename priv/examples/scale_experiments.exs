@@ -31,7 +31,7 @@ draw 800, 800 do
   h = y1 - y0
   steps = 10
 
-  label_font = load_font("priv/fonts/MapleMono-Regular.otf", 16.0)
+  label_font = font("MapleMono", 16.0)
 
   scale_quantize =
     Scale.Quantize.new(

@@ -2,7 +2,7 @@
 # Transforms them into user space and visualizes per-glyph extents next to the shaped run.
 alias Blendend.Text.{Font, GlyphBuffer, GlyphRun}
 
-font = load_font("priv/fonts/Alegreya-Regular.otf", 80.0)
+font = font("Alegreya", 80.0)
 text = "blendend"
 
 run =

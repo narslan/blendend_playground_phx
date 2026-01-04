@@ -92,9 +92,9 @@ end
 draw w, h do
   clear(fill: rgb(171, 233, 232))
 
-  title_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 28.0)
-  axis_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
-  label_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 18.0)
+  title_font = font("AlegreyaSans", 28.0)
+  axis_font = font("MapleMono", 12.0)
+  label_font = font("AlegreyaSans", 18.0)
 
   text(title_font, w / 3, 40, "Black cherry trees — height histogram", fill: rgb(24, 24, 28))
   # text(label_font, 28, 64, "Heights in feet, 5-ft bins", fill: rgb(70, 70, 80))

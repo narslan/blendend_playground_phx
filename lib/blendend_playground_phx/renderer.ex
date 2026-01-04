@@ -7,6 +7,8 @@ defmodule BlendendPlaygroundPhx.Renderer do
   def render(code) when is_binary(code) do
     header = """
     use Blendend.Draw
+    import BlendendPlaygroundPhx.FontDSL
+    import BlendendPlaygroundPhx.PaletteDSL
     #{code}
     """
 

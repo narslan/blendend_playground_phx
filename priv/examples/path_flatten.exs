@@ -18,7 +18,7 @@ draw width, height do
   bg = rgb(0x2A, 0x31, 0x18)
   clear(fill: bg)
 
-  font = load_font("priv/fonts/Alegreya-Regular.otf", 120)
+  font = font("Alegreya", 120)
 
   letter = "iEx"
 

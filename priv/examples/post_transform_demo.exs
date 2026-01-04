@@ -2,8 +2,8 @@ width = 700
 height = 480
 
 draw width, height do
-  label_font = load_font("priv/fonts/AlegreyaSans-Regular.otf", 14.0)
-  mono_font = load_font("priv/fonts/MapleMono-Regular.otf", 12.0)
+  label_font = font("AlegreyaSans", 14.0)
+  mono_font = font("MapleMono", 12.0)
 
   draw_rect = fn x, y, w, h, color, label ->
     rect(x, y, w, h, fill: color)

@@ -8,7 +8,7 @@ draw 500, 140 do
 
   amount = 3.5
   text_string = "Path distortion!"
-  font = load_font("priv/fonts/Alegreya-Regular.otf", 65.0)
+  font = font("Alegreya", 65.0)
 
   gr =
     GlyphBuffer.new!()

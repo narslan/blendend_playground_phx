@@ -6,7 +6,7 @@ alias Blendend.{Canvas, Style, Matrix2D, Draw, Path}
 
 draw 800, 400 do
   clear(fill: rgb(0, 0, 0))
-  font = load_font("priv/fonts/Alegreya-Regular.otf", 100.0)
+  font = font("Alegreya", 100.0)
   c = Draw.get_canvas()
 
   gr =
