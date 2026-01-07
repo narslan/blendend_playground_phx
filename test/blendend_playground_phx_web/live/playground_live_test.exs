@@ -3,6 +3,17 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLiveTest do
 
   import Phoenix.LiveViewTest
 
+  defp eventually(view, fun, attempts \\ 50) when is_function(fun, 0) do
+    Enum.reduce_while(1..attempts, nil, fn _attempt, _acc ->
+      if fun.() do
+        {:halt, :ok}
+      else
+        _ = render(view)
+        {:cont, nil}
+      end
+    end) || flunk("condition not met after #{attempts} attempts")
+  end
+
   test "switches between split and full width preview", %{conn: conn} do
     {:ok, view, _html} = live(conn, ~p"/playground")
 
@@ -50,10 +61,17 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLiveTest do
 
     assert has_element?(view, "#playground-render")
 
-    _ = view |> element("#playground-render") |> render_click()
-    _ = :sys.get_state(view.pid)
+    _ =
+      eventually(view, fn ->
+        has_element?(view, "#playground-render:not([disabled])")
+      end)
 
-    assert has_element?(view, "#playground-render-image") or
-             has_element?(view, "#playground-render-error")
+    _ = view |> element("#playground-render") |> render_click()
+
+    _ =
+      eventually(view, fn ->
+        has_element?(view, "#playground-render-image") or
+          has_element?(view, "#playground-render-error")
+      end)
   end
 end

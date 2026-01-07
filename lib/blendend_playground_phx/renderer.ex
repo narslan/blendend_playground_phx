@@ -19,11 +19,32 @@ defmodule BlendendPlaygroundPhx.Renderer do
         {:ok, base64} when is_binary(base64) ->
           {:ok, base64}
 
+        {:error, reason} ->
+          {:error, format_reason(reason)}
+
         other ->
           {:error, "unexpected result: #{inspect(other)}"}
       end
     rescue
-      e -> {:error, Exception.message(e)}
+      e -> {:error, format_failure(:error, e, __STACKTRACE__)}
+    catch
+      kind, reason -> {:error, format_failure(kind, reason, __STACKTRACE__)}
     end
+  end
+
+  defp format_reason(reason) when is_binary(reason) do
+    reason = String.trim(reason)
+    if reason == "", do: "Unknown error", else: reason
+  end
+
+  defp format_reason(reason), do: inspect(reason)
+
+  defp format_failure(kind, reason, stacktrace) do
+    formatted =
+      kind
+      |> Exception.format(reason, stacktrace)
+      |> String.trim()
+
+    if formatted == "", do: inspect({kind, reason}), else: formatted
   end
 end

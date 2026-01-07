@@ -212,36 +212,78 @@
             id="playground-render"
             phx-click="render"
             phx-disable-with="Rendering..."
-            class="inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700"
+            disabled={@rendering?}
+            class={[
+              "inline-flex items-center justify-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-200 disabled:cursor-not-allowed disabled:opacity-60 dark:border-slate-800 dark:bg-slate-900/60 dark:text-slate-100 dark:hover:border-slate-600 dark:hover:bg-slate-900/90 dark:focus:ring-slate-700",
+              @rendering? &&
+                "hover:border-slate-200 hover:bg-white dark:hover:border-slate-800 dark:hover:bg-slate-900/60"
+            ]}
           >
-            <.icon name="hero-arrow-path" class="size-4 opacity-70" /> Render
+            <.icon
+              name="hero-arrow-path"
+              class={["size-4 opacity-70", @rendering? && "animate-spin"]}
+            /> Render
           </button>
-          <%= if @render_ms && @image_base64 do %>
-            <p id="playground-render-time" class="text-xs text-base-content/60">
-              Render: {@render_ms} ms
+          <%= if @rendering? do %>
+            <p id="playground-rendering-status" class="text-xs text-base-content/60">
+              Rendering…
             </p>
+          <% else %>
+            <%= if @render_ms && @image_base64 do %>
+              <p id="playground-render-time" class="text-xs text-base-content/60">
+                Render: {@render_ms} ms
+              </p>
+            <% end %>
           <% end %>
         </div>
       </div>
       <div class="mt-4">
         <%= if @submitted? do %>
           <%= if @image_base64 do %>
-            <div class="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/60">
+            <div
+              id="playground-render-frame"
+              class="relative overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900/60"
+            >
               <img
                 id="playground-render-image"
                 src={"data:image/png;base64," <> @image_base64}
                 alt="Rendered preview"
-                class="w-full"
+                class="mx-auto block h-auto max-w-full"
               />
+              <%= if @rendering? do %>
+                <div class="absolute inset-0 grid place-items-center bg-white/60 backdrop-blur-sm dark:bg-slate-950/40">
+                  <div class="flex items-center gap-2 rounded-full border border-slate-200 bg-white/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-700 shadow-sm dark:border-slate-800 dark:bg-slate-950/70 dark:text-slate-100">
+                    <.icon name="hero-arrow-path" class="size-4 animate-spin opacity-70" />
+                    Rendering
+                  </div>
+                </div>
+              <% end %>
             </div>
           <% else %>
-            <div
-              id="playground-render-error"
-              class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200"
-            >
-              <p class="font-semibold">Render failed</p>
-              <p class="mt-2 whitespace-pre-wrap text-xs leading-relaxed">{@error}</p>
-            </div>
+            <%= if @rendering? do %>
+              <div
+                id="playground-render-loading"
+                class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/60"
+              >
+                <div class="flex items-center gap-3 text-sm text-slate-700 dark:text-slate-100">
+                  <.icon name="hero-arrow-path" class="size-5 animate-spin opacity-70" />
+                  <div>
+                    <p class="font-semibold">Rendering…</p>
+                    <p class="mt-1 text-xs text-slate-500 dark:text-slate-300">
+                      Generating a fresh preview for this sketch.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            <% else %>
+              <div
+                id="playground-render-error"
+                class="rounded-xl border border-rose-200 bg-rose-50 p-4 text-sm text-rose-700 dark:border-rose-900 dark:bg-rose-950/40 dark:text-rose-200"
+              >
+                <p class="font-semibold">Render failed</p>
+                <p class="mt-2 whitespace-pre-wrap text-xs leading-relaxed">{@error}</p>
+              </div>
+            <% end %>
           <% end %>
         <% else %>
           <p class="text-sm text-base-content/60">

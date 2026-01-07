@@ -19,6 +19,9 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
       |> assign(:image_base64, nil)
       |> assign(:error, nil)
       |> assign(:render_ms, nil)
+      |> assign(:rendering?, false)
+      |> assign(:render_ref, nil)
+      |> assign(:pending_render_code, nil)
       |> assign(:examples, examples)
       |> assign(:example_options, example_options)
       |> assign(:code, code)
@@ -27,9 +30,12 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
       |> assign(:view_mode, view_mode)
       |> assign(:editor_expanded?, false)
 
-    if connected?(socket) do
-      send(self(), {:render_code, code})
-    end
+    socket =
+      if connected?(socket) do
+        request_render(socket, code)
+      else
+        socket
+      end
 
     {:ok, socket}
   end
@@ -37,24 +43,19 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
   @impl true
   def handle_event("code-change", %{"playground" => %{"code" => code}}, socket) do
     example = socket.assigns.example
-    {image_base64, error, render_ms} = render_code(code)
 
     {:noreply,
      socket
      |> assign(:form, to_form(%{"code" => code, "example" => example}, as: :playground))
-     |> assign(:submitted?, true)
-     |> assign(:image_base64, image_base64)
-     |> assign(:error, error)
-     |> assign(:render_ms, render_ms)
      |> assign(:code, code)
      |> assign(:example, example)
-     |> maybe_assign_custom_code(example, code)}
+     |> maybe_assign_custom_code(example, code)
+     |> request_render(code)}
   end
 
   @impl true
   def handle_event("render", _params, socket) do
-    send(self(), {:render_code, socket.assigns.code})
-    {:noreply, socket}
+    {:noreply, request_render(socket, socket.assigns.code)}
   end
 
   @impl true
@@ -65,20 +66,15 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
       "format" ->
         case BlendendPlaygroundPhx.Examples.format(example, code) do
           {:ok, formatted_code} ->
-            {image_base64, error, render_ms} = render_code(formatted_code)
-
             {:noreply,
              socket
              |> assign(
                :form,
                to_form(%{"code" => formatted_code, "example" => example}, as: :playground)
              )
-             |> assign(:submitted?, true)
-             |> assign(:image_base64, image_base64)
-             |> assign(:error, error)
-             |> assign(:render_ms, render_ms)
              |> assign(:code, formatted_code)
              |> maybe_assign_custom_code(example, formatted_code)
+             |> request_render(formatted_code)
              |> put_flash(:info, "Formatted #{example}.exs")}
 
           {:error, :unknown_example} ->
@@ -117,7 +113,6 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
         examples = BlendendPlaygroundPhx.Examples.all()
         example_options = build_example_options(examples)
         code = socket.assigns.code
-        {image_base64, error, render_ms} = render_code(code)
 
         {:noreply,
          socket
@@ -126,10 +121,7 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
          |> assign(:form, to_form(%{"code" => code, "example" => saved_name}, as: :playground))
          |> assign(:example, saved_name)
          |> assign(:save_form, to_form(%{"name" => ""}, as: :save))
-         |> assign(:submitted?, true)
-         |> assign(:image_base64, image_base64)
-         |> assign(:error, error)
-         |> assign(:render_ms, render_ms)
+         |> request_render(code)
          |> put_flash(:info, "Saved as #{saved_name}.exs")}
 
       {:error, :invalid_name} ->
@@ -170,46 +162,99 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLive do
         {BlendendPlaygroundPhx.Examples.get(name) || socket.assigns.code, name}
       end
 
-    {image_base64, error, render_ms} = render_code(code)
-
     {:noreply,
      socket
      |> assign(:form, to_form(%{"code" => code, "example" => example}, as: :playground))
-     |> assign(:submitted?, true)
-     |> assign(:image_base64, image_base64)
-     |> assign(:error, error)
-     |> assign(:render_ms, render_ms)
      |> assign(:code, code)
-     |> assign(:example, example)}
+     |> assign(:example, example)
+     |> request_render(code)}
   end
 
   @impl true
-  def handle_info({:render_code, code}, socket) do
-    {image_base64, error, render_ms} = render_code(code)
+  def handle_info({:render_complete, ref, result, render_ms}, socket) do
+    if socket.assigns.render_ref != ref do
+      {:noreply, socket}
+    else
+      {image_base64, error} = normalize_render_result(result)
+      pending_code = socket.assigns.pending_render_code
 
-    {:noreply,
-     socket
-     |> assign(:submitted?, true)
-     |> assign(:image_base64, image_base64)
-     |> assign(:error, error)
-     |> assign(:render_ms, render_ms)}
+      socket =
+        socket
+        |> assign(:submitted?, true)
+        |> assign(:image_base64, image_base64)
+        |> assign(:error, error)
+        |> assign(:render_ms, render_ms)
+        |> assign(:rendering?, false)
+        |> assign(:render_ref, nil)
+        |> assign(:pending_render_code, nil)
+
+      socket =
+        if is_binary(pending_code) do
+          request_render(socket, pending_code)
+        else
+          socket
+        end
+
+      {:noreply, socket}
+    end
   end
 
-  defp render_code(code) do
-    start = System.monotonic_time()
+  defp request_render(socket, code) when is_binary(code) do
+    if socket.assigns.rendering? do
+      assign(socket, :pending_render_code, code)
+    else
+      start_render_task(socket, code)
+    end
+  end
 
-    {image_base64, error} =
-      case BlendendPlaygroundPhx.Renderer.render(code) do
-        {:ok, base64} -> {base64, nil}
-        {:error, reason} -> {nil, to_string(reason)}
-      end
+  defp start_render_task(socket, code) when is_binary(code) do
+    parent = self()
+    ref = make_ref()
 
-    elapsed_ms =
-      System.monotonic_time()
-      |> Kernel.-(start)
-      |> System.convert_time_unit(:native, :millisecond)
+    {:ok, _pid} =
+      Task.start(fn ->
+        start = System.monotonic_time()
 
-    {image_base64, error, elapsed_ms}
+        result =
+          try do
+            BlendendPlaygroundPhx.Renderer.render(code)
+          catch
+            kind, reason ->
+              {:error, Exception.format(kind, reason, __STACKTRACE__)}
+          end
+
+        elapsed_ms =
+          System.monotonic_time()
+          |> Kernel.-(start)
+          |> System.convert_time_unit(:native, :millisecond)
+
+        send(parent, {:render_complete, ref, result, elapsed_ms})
+      end)
+
+    socket
+    |> assign(:submitted?, true)
+    |> assign(:rendering?, true)
+    |> assign(:render_ref, ref)
+    |> assign(:render_ms, nil)
+    |> assign(:error, nil)
+  end
+
+  defp normalize_render_result({:ok, base64}) when is_binary(base64) and base64 != "" do
+    {base64, nil}
+  end
+
+  defp normalize_render_result({:ok, base64}) when is_binary(base64) do
+    {nil, "Renderer returned an empty image."}
+  end
+
+  defp normalize_render_result({:error, reason}) do
+    message = reason |> to_string() |> String.trim()
+    message = if message == "", do: "Unknown render error.", else: message
+    {nil, message}
+  end
+
+  defp normalize_render_result(other) do
+    {nil, "Unexpected render result: #{inspect(other)}"}
   end
 
   defp maybe_assign_custom_code(socket, "custom", code) do

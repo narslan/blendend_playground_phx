@@ -136,7 +136,6 @@ draw w, h do
 
     translate cell.x, cell.y do
       round_rect(0, 0, cell.w, cell.h, 18, 18,
-
         stroke: scheme.stroke,
         stroke_width: 2.0
       )

@@ -9,6 +9,28 @@ defmodule BlendendPlaygroundPhx.Demos.FloralWave do
     |> Map.get(:colors, [])
     |> Palette.from_hex_list_rgb()
     |> Enum.map(&rgb/1)
+    |> ensure_palette()
+  end
+
+  defp ensure_palette([]), do: default_palette()
+
+  defp ensure_palette(palette) do
+    case length(palette) do
+      n when n >= 4 ->
+        palette
+
+      n ->
+        palette ++ Enum.take(Stream.cycle(palette), 4 - n)
+    end
+  end
+
+  defp default_palette do
+    [
+      rgb(250, 246, 240),
+      rgb(20, 20, 22),
+      rgb(214, 84, 117),
+      rgb(40, 134, 180)
+    ]
   end
 
   defp draw_flower(x, y, r_max, r_step, colors, base) do
