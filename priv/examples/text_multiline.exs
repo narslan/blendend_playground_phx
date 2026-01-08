@@ -2,8 +2,9 @@
 # Shapes and centers multiple lines manually using Font metrics and GlyphRun.fill!/5.
 
 alias Blendend.Text.{Face, Font, GlyphBuffer, GlyphRun}
-width = 1800
-height = 1800
+# A4 Size
+width = 2480
+height = 3508
 
 draw width, height do
   font = font("Alegreya", 62.0)
