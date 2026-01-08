@@ -7,10 +7,11 @@ width = 2480
 height = 3508
 
 draw width, height do
+  font_bold = font("AlegreyaSans", 62.0, "Bold")
   font = font("Alegreya", 62.0)
   fm = Font.metrics!(font)
   canvas = Blendend.Draw.get_canvas()
-
+  text(font_bold, 610, 120, "Tell something or keep quiet", fill: rgb(255, 255, 255))
   text = """
   Hello from blendend!
   This is a simple multiline text example

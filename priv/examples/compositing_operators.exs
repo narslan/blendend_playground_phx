@@ -101,7 +101,7 @@ tiler =
   )
 
 draw w, h do
-  clear(fill: bg)
+  # clear(fill: bg)
 
   title_font = font("AlegreyaSans", 40.0, "Bold")
   subtitle_font = font("AlegreyaSans", 24.0)
@@ -125,8 +125,6 @@ draw w, h do
     highlights: [0, 3]
   )
 
-  checker = 14
-
   for {op, idx} <- Enum.with_index(operators) do
     col = rem(idx, cols)
     row = div(idx, cols)
@@ -149,20 +147,6 @@ draw w, h do
       content_y = 54
       content_w = cell.w - 32
       content_h = cell.h - 70
-
-      bg_cols = trunc(content_w / checker)
-      bg_rows = trunc(content_h / checker)
-
-      for j <- 0..bg_rows, i <- 0..bg_cols do
-        fill =
-          if rem(i + j, 2) == 0 do
-            rgb(0, 0, 30)
-          else
-            rgb(240, 240, 240, 100)
-          end
-
-        rect(content_x + i * checker, content_y + j * checker, checker, checker, fill: fill)
-      end
 
       dx = content_x + content_w * 0.42
       dy = content_y + content_h * 0.58
