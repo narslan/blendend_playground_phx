@@ -69,7 +69,7 @@ cols = 6
 rows = Integer.ceil_div(length(operators), cols)
 
 tile_w = 210
-tile_h = 170
+tile_h = 210
 gap = 18
 
 pad_x = 34
@@ -89,7 +89,7 @@ h = header_h + pad_bottom + grid_inner_h
 scheme = palette("artists.VanGogh")
 
 bg = palette_named(scheme, :background) || rgb(244, 246, 250)
-ink = scheme |> palette_at(4) |> alpha(255)
+ink = scheme |> palette_at(0) |> alpha(255)
 
 dest = scheme |> palette_at(1) |> alpha(220)
 src = scheme |> palette_at(3) |> alpha(210)
@@ -97,19 +97,18 @@ src = scheme |> palette_at(3) |> alpha(210)
 tiler =
   Tiler.grid(rows, cols, {pad_x, header_h, grid_inner_w, grid_inner_h},
     x_padding_inner: gap / (tile_w + gap),
-    y_padding_inner: gap / (tile_h + gap),
-    padding_outer: 0.0
+    y_padding_inner: gap / (tile_h + gap)
   )
 
 draw w, h do
   clear(fill: bg)
 
-  title_font = font("AlegreyaSans", 30.0)
-  subtitle_font = font("AlegreyaSans", 14.0)
-  desc_font = font("AlegreyaSans", 12.0)
-  label_font = font("MapleMono", 12.0)
+  title_font = font("AlegreyaSans", 40.0, "Bold")
+  subtitle_font = font("AlegreyaSans", 24.0)
+  desc_font = font("AlegreyaSans", 22.0, "Italic")
+  label_font = font("MapleMono", 16.0, "Bold")
 
-  text(title_font, pad_x, 44, "Compositing operators", fill: ink)
+  text(title_font, pad_x + 410, 44, "Compositing operators", fill: ink)
 
   text(subtitle_font, pad_x, 68, "Ziel (Kreis) + Quelle (Quadrat mit comp_op)", fill: ink)
 
@@ -144,7 +143,7 @@ draw w, h do
       desc = Map.get(descriptions, op, "")
 
       text(label_font, 16, 24, op_label, fill: ink)
-      text(desc_font, 16, 42, desc, fill: alpha(ink, 190))
+      text(desc_font, 16, 42, desc, fill: ink)
 
       content_x = 16
       content_y = 54
@@ -157,9 +156,9 @@ draw w, h do
       for j <- 0..bg_rows, i <- 0..bg_cols do
         fill =
           if rem(i + j, 2) == 0 do
-            rgb(0, 0, 52)
+            rgb(0, 0, 30)
           else
-            rgb(0, 0, 240)
+            rgb(240, 240, 240, 100)
           end
 
         rect(content_x + i * checker, content_y + j * checker, checker, checker, fill: fill)
