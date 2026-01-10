@@ -1,6 +1,6 @@
 # Compositing operator demo / mini tutorial.
 #
-# Each tile draws the same destination (circle) and source (square).
+# Each tile draws the same destination (yellow) and source (cyan).
 # The source square is drawn with `comp_op: ...` so you can compare how each operator blends.
 
 alias BlendendPlaygroundPhx.Tiler
