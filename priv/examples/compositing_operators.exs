@@ -1,7 +1,6 @@
 # Compositing operator demo / mini tutorial.
 #
 # Each tile draws the same destination (yellow) and source (cyan).
-# The source square is drawn with `comp_op: ...` so you can compare how each operator blends.
 
 alias BlendendPlaygroundPhx.Tiler
 
@@ -98,7 +97,10 @@ draw w, h do
           content_w - content_w * 0.75,
           content_h - content_h * 0.75,
           content_w * 0.75,
-          content_h * 0.75, fill: src, comp_op: op)
+          content_h * 0.75,
+          fill: src,
+          comp_op: op
+        )
       end
     end
   end
