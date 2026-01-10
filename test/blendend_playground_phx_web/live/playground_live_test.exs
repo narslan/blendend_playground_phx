@@ -8,6 +8,11 @@ defmodule BlendendPlaygroundPhxWeb.PlaygroundLiveTest do
       if fun.() do
         {:halt, :ok}
       else
+        receive do
+        after
+          10 -> :ok
+        end
+
         _ = render(view)
         {:cont, nil}
       end

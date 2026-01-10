@@ -47,18 +47,14 @@ pad_x = 34
 header_h = 88
 pad_bottom = 34
 
-swatch_w = 320
-swatch_gap = 22
-
 grid_inner_w = cols * tile_w + (cols - 1) * gap
 grid_inner_h = rows * tile_h + (rows - 1) * gap
 
 grid_w = pad_x * 2 + grid_inner_w
-w = grid_w + swatch_gap + swatch_w
+w = grid_w
 h = header_h + pad_bottom + grid_inner_h
 
-
-ink = rgb(110, 100, 235)
+ink = rgb(10, 10, 35)
 stroke_color = rgb(0, 0, 10)
 src = rgb(104, 199, 232)
 dest = rgb(255, 220, 1)
@@ -70,17 +66,12 @@ tiler =
   )
 
 draw w, h do
-   #clear_all()
-
   title_font = font("AlegreyaSans", 40.0, "Bold")
-  subtitle_font = font("AlegreyaSans", 24.0)
   label_font = font("MapleMono", 16.0, "Bold")
 
-  text(title_font, pad_x + 410, 44, "Compositing operators", fill: ink)
-
+  text(title_font, pad_x + 480, 44, "Compositing operators", fill: ink)
 
   line(pad_x, 78, grid_w - pad_x, 78, stroke: alpha(ink, 180), stroke_width: 1.0)
-
 
   for {op, idx} <- Enum.with_index(operators) do
     col = rem(idx, cols)
@@ -96,17 +87,19 @@ draw w, h do
 
       op_label = ":" <> Atom.to_string(op)
       text(label_font, 16, 24, op_label, fill: ink)
-  
+
       content_w = cell.w - 32
       content_h = cell.h - 70
-   
- translate 20, 40 do
- 
-     rect(0, 0, content_w * 0.75, content_h * 0.75 , fill: dest)
- rect( content_w - content_w * 0.75, content_h - content_h * 0.75, content_w * 0.75, content_h * 0.75, fill: src, comp_op: op)  
-     
-      
-end
+
+      translate 20, 40 do
+        rect(0, 0, content_w * 0.75, content_h * 0.75, fill: dest)
+
+        rect(
+          content_w - content_w * 0.75,
+          content_h - content_h * 0.75,
+          content_w * 0.75,
+          content_h * 0.75, fill: src, comp_op: op)
+      end
     end
   end
 end

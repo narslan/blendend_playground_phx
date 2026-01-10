@@ -3,6 +3,6 @@ defmodule BlendendPlaygroundPhxWeb.PageControllerTest do
 
   test "GET /", %{conn: conn} do
     conn = get(conn, ~p"/")
-    assert html_response(conn, 200) =~ "Blendend"
+    assert redirected_to(conn, 302) == ~p"/playground"
   end
 end

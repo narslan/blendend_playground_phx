@@ -12,6 +12,7 @@ draw width, height do
   fm = Font.metrics!(font)
   canvas = Blendend.Draw.get_canvas()
   text(font_bold, 610, 120, "Tell something or keep quiet", fill: rgb(255, 255, 255))
+
   text = """
   Hello from blendend!
   This is a simple multiline text example
