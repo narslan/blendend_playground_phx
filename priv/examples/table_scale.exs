@@ -1,32 +1,47 @@
 # This is a table layout demo built on `BlendendPlaygroundPhx.Tiler`.
 alias BlendendPlaygroundPhx.Tiler
 
-width = 920
-height = 620
+width = 1920
+height = 820
 
 draw width, height do
-  scheme = palette("artists.VanGogh")
+  scheme = palette("artists.Benedictus")
 
-  bg = scheme |> palette_at(0)
+  bg = scheme |> palette_at(3)
   ink = scheme |> palette_at(4)
+  title_color = scheme |> palette_at(4)
+  subtitle_color = scheme |> palette_at(4)
   grid = alpha(ink, 10)
   header_bg = scheme |> palette_at(0) |> alpha(140)
   stripe_bg = scheme |> palette_at(2) |> alpha(18)
 
   clear(fill: bg)
 
-  title_font = font("AlegreyaSans", 48.0)
-  subtitle_font = font("AlegreyaSans", 24.0)
+  title_font = font("AlegreyaSans", 60.0, "Black")
+  subtitle_font = font("AlegreyaSans", 24.0, "BoldItalic")
   header_font = font("AlegreyaSans", 24.0, "Bold")
-  cell_font = font("MapleMono", 24.0)
+  cell_font = font("MapleMono", 30.0, "Bold")
 
-  text(title_font, 340, 52, "Tables", fill: ink)
-  text(subtitle_font, 40, 78, "Tiler = Band scales for rows + columns", fill: alpha(ink, 170))
+  text(title_font, width / 2 - 50, 52, "Tables", fill: title_color)
+  text(subtitle_font, 40, 78, "Tiler = Band scales for rows + columns", fill: subtitle_color)
 
   data = [
     ["File name", "Last modified", "Type", "Size"],
     ["a.txt", "3 Months ago", "TXT", "214 KB"],
     ["b.pdf", "1 Months ago", "PDF", "114 KB"],
+    ["c.wav", "11 Months ago", "WAV", "21 MB"],
+    ["c.wav", "11 Months ago", "WAV", "21 MB"],
+    ["a.txt", "3 Months ago", "TXT", "214 KB"],
+    ["b.pdf", "1 Months ago", "PDF", "114 KB"],
+    ["c.wav", "11 Months ago", "WAV", "21 MB"],
+    ["c.wav", "11 Months ago", "WAV", "21 MB"],
+    ["a.txt", "3 Months ago", "TXT", "214 KB"],
+    ["b.pdf", "1 Months ago", "PDF", "114 KB"],
+    ["c.wav", "11 Months ago", "WAV", "21 MB"],
+    ["c.wav", "11 Months ago", "WAV", "21 MB"],
+    ["a.txt", "3 Months ago", "TXT", "214 KB"],
+    ["b.pdf", "1 Months ago", "PDF", "114 KB"],
+    ["c.wav", "11 Months ago", "WAV", "21 MB"],
     ["c.wav", "11 Months ago", "WAV", "21 MB"]
   ]
 
@@ -36,11 +51,7 @@ draw width, height do
   table_h = height - table_y - 60
 
   tiler =
-    Tiler.table(data, {table_x, table_y, table_w, table_h},
-      x_padding_inner: 0.8,
-      y_padding_inner: 0.14,
-      padding_outer: 0.02
-    )
+    Tiler.table(data, {table_x, table_y, table_w, table_h})
 
   row_h = tiler.cell_h
   pad_x = 14
@@ -62,17 +73,17 @@ draw width, height do
 
   for col <- tiler.cols do
     x = Scale.map(tiler.x_scale, col)
-    line(x, table_y, x, table_y + table_h, stroke: grid, stroke_width: 1.0)
+    line(x, table_y, x, table_y + table_h, stroke: grid, stroke_width: 4.0)
   end
 
   line(table_x, table_y + table_h, table_x + table_w, table_y + table_h,
     stroke: grid,
-    stroke_width: 1.0
+    stroke_width: 4.0
   )
 
   line(table_x + table_w, table_y, table_x + table_w, table_y + table_h,
     stroke: grid,
-    stroke_width: 1.0
+    stroke_width: 4.0
   )
 
   for row <- tiler.rows do

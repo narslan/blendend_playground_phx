@@ -95,7 +95,7 @@ draw width, height do
               shadow_path(row_path, 0.0, 0.0, tsize / 12.0,
                 fill: rgb(0, 0, 0),
                 alpha: 33.0 / 255.0,
-                resolution: 0.4
+                resolution: 0.1
               )
 
               grad =
