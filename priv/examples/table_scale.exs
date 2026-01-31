@@ -20,7 +20,7 @@ draw width, height do
   title_font = font("AlegreyaSans", 60.0, "Black")
   subtitle_font = font("AlegreyaSans", 24.0, "BoldItalic")
   header_font = font("AlegreyaSans", 24.0, "Bold")
-  cell_font = font("MapleMono", 30.0, "Bold")
+  cell_font = font("MapleMono", 30.0, "Thin")
 
   text(title_font, width / 2 - 50, 52, "Tables", fill: title_color)
   text(subtitle_font, 40, 78, "Tiler = Band scales for rows + columns", fill: subtitle_color)
@@ -55,7 +55,7 @@ draw width, height do
 
   row_h = tiler.cell_h
   pad_x = 14
-  pad_y = 10
+  pad_y = 30
 
   for row <- tiler.rows do
     y = Scale.map(tiler.y_scale, row)

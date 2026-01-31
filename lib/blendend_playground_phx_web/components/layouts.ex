@@ -40,7 +40,7 @@ defmodule BlendendPlaygroundPhxWeb.Layouts do
   def app(assigns) do
     ~H"""
     <main class="px-4 pt-4 pb-10 sm:px-6 lg:px-8">
-      <div class={["mx-auto", if(@fluid, do: "max-w-none", else: "max-w-6xl")]}>
+      <div class={["mx-auto", if(@fluid, do: "max-w-none", else: "max-w-8xl")]}>
         {render_slot(@inner_block)}
       </div>
     </main>
