@@ -21,7 +21,7 @@ defmodule BlendendPlaygroundPhx.MixProject do
   def application do
     [
       mod: {BlendendPlaygroundPhx.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :element]
     ]
   end
 
@@ -65,6 +65,7 @@ defmodule BlendendPlaygroundPhx.MixProject do
       {:tidewave, "~> 0.5", only: :dev},
       {:scale, github: "narslan/scale"},
       {:element, github: "narslan/element"}
+      # {:element, path: "../element"}
     ]
   end
 
