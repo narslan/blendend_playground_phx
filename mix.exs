@@ -65,7 +65,7 @@ defmodule BlendendPlaygroundPhx.MixProject do
       {:tidewave, "~> 0.5", only: :dev},
       {:scale, github: "narslan/scale"},
       {:element, github: "narslan/element"}
-      # {:element, path: "../element"}
+     # {:element, path: "../element"}
     ]
   end
 
