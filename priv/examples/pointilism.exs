@@ -1,4 +1,4 @@
-# 
+# This is a minimal template with palette support
 use BlendendPlaygroundPhx.Calculation.Macros
 alias BlendendPlaygroundPhx.Palette
 alias Blendend.Path
