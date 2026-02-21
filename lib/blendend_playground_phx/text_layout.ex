@@ -144,8 +144,8 @@ defmodule TextBoundLayout do
 
       text(
         font_small,
-        base_x + ux0,
-        base_y + uy0 + 150,
+        base_x + ux1,
+        base_y + uy1 + 150,
         "#{format_value(ux1)} #{format_value(uy1)}",
         fill: color
       )
