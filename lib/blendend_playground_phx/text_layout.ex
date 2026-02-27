@@ -122,31 +122,38 @@ defmodule TextBoundLayout do
     # Draw each glyph's box (now aligned per glyph)
     boxes_u
     |> Enum.each(fn {ux0, uy0, ux1, uy1} ->
+      x0 = base_x + ux0
+      y0 = base_y + uy0
+      x1 = base_x + ux1
+      y1 = base_y + uy1
+
       box(
-        base_x + ux0,
-        base_y + uy0,
-        base_x + ux1,
-        base_y + uy1,
+        x0,
+        y0,
+        x1,
+        y1,
         stroke: Blendend.Style.Color.random(),
         stroke_width: 1.5
       )
 
-      circle(base_x + ux0, base_y + uy0, 5.0, fill: hsv(0, 0.1, 1))
-      circle(base_x + ux1, base_y + uy1, 5.0, fill: hsv(160, 0.6, 0.5))
+      circle(x0, y0, 5.0, fill: hsv(0, 0.1, 1))
+      circle(x0, y1, 5.0, fill: hsv(0, 0.1, 1))
+      circle(x1, y1, 5.0, fill: hsv(160, 0.6, 0.5))
+      circle(x1, y0, 5.0, fill: hsv(0, 0.6, 0.5))
 
       text(
         font_small,
-        base_x + ux0,
-        base_y + uy0 + 50,
-        "#{format_value(ux0)} #{format_value(uy0)}",
+        x0,
+        y0 + 50,
+        "#{format_value(x0)} #{format_value(y0)}",
         fill: color
       )
 
       text(
         font_small,
-        base_x + ux1,
-        base_y + uy1 + 150,
-        "#{format_value(ux1)} #{format_value(uy1)}",
+        x0,
+        y0 + 150,
+        "#{format_value(x1)} #{format_value(y1)}",
         fill: color
       )
     end)
