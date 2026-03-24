@@ -33,9 +33,6 @@ defmodule BlendendPlaygroundPhx.Ticks do
         pos when is_number(pos) ->
           label = formatter.(normalize_zero(value)) |> IO.iodata_to_binary()
           [%{value: value, position: pos * 1.0, label: label} | acc]
-
-        other ->
-          raise ArgumentError, "axis tick position must be numeric, got: #{inspect(other)}"
       end
     end)
     |> Enum.reverse()
