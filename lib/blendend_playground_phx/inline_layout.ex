@@ -26,8 +26,8 @@ defmodule BlendendPlaygroundPhx.Text.InlineLayout do
     face = Keyword.get(opts, :face)
     font_sup = Font.create!(face, metrics["size"] * scale)
 
-    sup_y = metrics["y_height"] * 0.8
-    sub_y = -metrics["y_height"] * 0.3
+    sup_y = metrics["underline_position"] * 0.8
+    sub_y = -metrics["underline_position"] * 0.3
 
     pen_x =
       Enum.reduce(tokens, {base_x, nil}, fn
