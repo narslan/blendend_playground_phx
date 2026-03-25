@@ -1,90 +1,79 @@
-defmodule BlendendPlayground.Text.InlineLayout do
-  alias Blendend.Text.{Font, GlyphBuffer, GlyphRun}
+alias Blendend.Text.{Face, Font}
+alias BlendendPlaygroundPhx.Text.InlineLayout
 
-  defp draw_and_measure(text, font, x, y, c) do
-    gb =
-      GlyphBuffer.new!()
-      |> GlyphBuffer.set_utf8_text!(text)
-      |> Font.shape!(font)
+width = 1280
+height = 960
 
-    run = GlyphRun.new!(gb)
-
-    GlyphRun.fill!(c, font, x, y, run)
-
-    adv = Font.get_text_metrics!(font, gb)["advance_x"]
-        IO.inspect(adv)
-
-    {adv, run}
-  end
-
-  def layout_inline(tokens, font, base_x, base_y, opts \\ []) do
-    c = Keyword.fetch!(opts, :canvas)
-
-    metrics = Font.metrics!(font)
-    scale = Keyword.get(opts, :script_scale, 0.65)
-
-    face = Keyword.get(opts, :face)
-    font_sup = Font.create!(face, metrics["size"] * scale)
-
-    sup_y = metrics["ascent"] * 0.8
-    sub_y = metrics["y_min"] * 0.3
-
-    pen_x =
-      Enum.reduce(tokens, {base_x, nil}, fn
-        {:cluster, items}, {pen_x, last_x} ->
-          Enum.each(items, fn
-            {:sup, text} ->
-              draw_and_measure(text, font_sup, last_x, base_y + sup_y, c)
-
-            {:sub, text} ->
-              draw_and_measure(text, font_sup, last_x, base_y + sub_y, c)
-          end)
-
-          # pen_x bleibt gleich!
-          {pen_x, last_x}
-        {:normal, text}, {pen_x, nil} ->
-    
-          {adv, _} = draw_and_measure(text, font, 0, base_y, c)
-          {pen_x + adv, pen_x}
-
-        {:normal, text}, {pen_x, last_x} ->
-    
-          {adv, _} = draw_and_measure(text, font, last_x, base_y, c)
-          {pen_x + adv, pen_x}
-      end)
-
-    pen_x
-  end
-end
-
-
-alias Blendend.Text.{Face, Font, GlyphBuffer, GlyphRun}
-# A4 Size
-width = 800
-height = 800
+samples = [
+  {"Water", [{:text, "H"}, {:script, sub: "2"}, {:text, "O"}]},
+  {"Pythagoras",
+   [
+     {:text, "x"},
+     {:script, sup: "2"},
+     {:text, " + y"},
+     {:script, sup: "2"},
+     {:text, " = z"},
+     {:script, sup: "2"}
+   ]},
+  {"Sulfate", [{:text, "SO"}, {:script, sub: "4"}, {:script, sup: "2-"}]},
+  {"Ammonium", [{:text, "NH"}, {:cluster, [sup: "+", sub: "4"]}]},
+  {"Logarithm", [{:text, "log"}, {:script, sub: "2"}, {:text, "(n)"}]}
+]
 
 draw width, height do
+  clear(fill: rgb(12, 17, 29))
+
   face = Face.load!("priv/fonts/Alegreya-Regular.otf")
-  font = Font.create!(face, 60)
+  display_font = Font.create!(face, 74.0)
+  title_font = Font.create!(face, 38.0)
+  label_font = font("Maplemono", 20.0)
 
-  tokens = [
-    {:normal, "C"},
-    {:normal, "H"},
-    {:cluster,
-     [
-       {:sup, "+"},
-       {:sub, "3"}
-     ]}
-  ]
+  canvas = Blendend.Draw.get_canvas()
+  paper = rgb(236, 242, 248)
+  ink = rgb(247, 250, 252)
+  accent = rgb(120, 198, 255)
+  guide = rgb(71, 101, 135, 170)
+  panel = rgb(22, 31, 49, 220)
 
-  c = Blendend.Draw.get_canvas()
-
-  BlendendPlayground.Text.InlineLayout.layout_inline(
-    tokens,
-    font,
-    100,
-    100,
-    canvas: c,
-    face: face
+  text(
+    title_font,
+    72,
+    86,
+    "Manual subscript/superscript layout with Blendend",
+    fill: paper
   )
+
+  text(
+    label_font,
+    72,
+    124,
+    "Each script cluster is shaped separately, shifted on the baseline, and advanced by its widest run.",
+    fill: rgb(155, 181, 206)
+  )
+
+  Enum.with_index(samples)
+  |> Enum.each(fn {{label, tokens}, index} ->
+    panel_y = 170 + index * 140
+    baseline_y = panel_y + 80
+
+    rect(56, panel_y, width - 112, 108, fill: panel)
+    line(88, baseline_y, width - 96, baseline_y, stroke: guide, stroke_width: 1.5)
+
+    text(label_font, 88, panel_y + 34, label, fill: accent)
+    text(label_font, width - 180, panel_y + 34, "baseline", fill: guide)
+
+    InlineLayout.layout_inline(
+      tokens,
+      display_font,
+      190,
+      baseline_y,
+      canvas: canvas,
+      face: face,
+      fill: ink,
+      script_scale: 0.62,
+      superscript_rise: 28.0,
+      subscript_drop: 18.0,
+      cluster_gap: 4.0
+    )
+  end)
 end

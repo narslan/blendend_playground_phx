@@ -8,9 +8,7 @@ draw width, height do
   fm = Font.metrics!(font)
   canvas = Blendend.Draw.get_canvas()
 
- atoms = Element.Query.where(
-  atomic_number: {:<, 10}
-) |> Element.Query.order_by(:atomic_number)
+  atoms = Element.Query.where(atomic_number: {:<, 10}) |> Element.Query.order_by(:atomic_number)
   num_lines = length(atoms)
   IO.inspect(num_lines)
 
@@ -21,8 +19,6 @@ draw width, height do
   line_height = fm["ascent"] + fm["descent"] + fm["line_gap"]
 
   fill_style = Blendend.Style.Color.rgb!(140, 25, 25)
-
-
 
   Enum.reduce(atoms, start_y, fn line, y ->
     gb =

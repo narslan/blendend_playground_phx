@@ -16,5 +16,6 @@ draw width, height do
   text = """
   Hello from blendend!
   """
-MultilineLayout.schreib(canvas, font_bold, fm, text)
+
+  MultilineLayout.schreib(canvas, font_bold, fm, text)
 end

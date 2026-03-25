@@ -35,7 +35,6 @@ draw width, height do
 
   with_transform m do
     for j <- 0..(num - 1), i <- 0..(num - 1) do
-  
       x = i * r * sin60 * 2
       y = j * (r + r * cos60)
       circle(x, y, 4, fill: Enum.random(palette))
