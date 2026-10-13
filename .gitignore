@@ -35,3 +35,4 @@ blendend_playground_phx-*.tar
 npm-debug.log
 /assets/node_modules/
 NotoSansCJKjp-Black.otf
+mix.lock
