@@ -8,15 +8,15 @@ draw 800, 800 do
   # 1) Background
   clear(fill: rgb(242, 233, 226))
 
-  text_string = "A"
+  text_string = "诗"
 
   # 2) Load font as usual
-  face_alegreya = Blendend.Text.Face.load!("priv/fonts/Alegreya-Regular.otf")
+  face_alegreya = Blendend.Text.Face.load!("/home/nevroz/.fonts/fandol/FandolKai-Regular.otf")
   font_big = Blendend.Text.Font.create!(face_alegreya, 180.0)
   font_small = Blendend.Text.Font.create!(face_alegreya, 26.0)
 
   # 3) Draw normal text for reference
-  baseline_x = 200.0
+  baseline_x = 0.0
   baseline_y = 600.0
 
   # 4) Shape the text into a GlyphRun

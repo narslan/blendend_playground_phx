@@ -14,5 +14,5 @@ draw 512, 512 do
 
   # set fill_rule to :non_zero to see the change
   fill_rule(:even_odd)
-  fill_path(p, fill: rgb(255, 255, 255))
+  fill_path(p, fill: rgb(0, 25, 255))
 end

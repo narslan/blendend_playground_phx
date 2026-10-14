@@ -8,7 +8,7 @@ draw 800, 400 do
   text_string = "今天"
   # 1) Load face + font
   face = Face.load!("/home/nevroz/.fonts/fandol/FandolKai-Regular.otf")
-  size = 60.0
+  size = 160.0
   font = Font.create!(face, size)
   canvas = Draw.get_canvas()
   # 2) baseline where utf8_text would draw
