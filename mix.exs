@@ -61,7 +61,7 @@ defmodule BlendendPlaygroundPhx.MixProject do
       {:gettext, "~> 1.0"},
       {:jason, "~> 1.2"},
       {:bandit, "~> 1.5"},
-      {:blendend, "~> 0.3"},
+      {:blendend, "~> 0.3.4"},
       {:scale, github: "narslan/scale"},
       {:element, github: "narslan/element"}
       # {:element, path: "../element"}
