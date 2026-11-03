@@ -3,7 +3,6 @@ defmodule BlendendPlaygroundPhx.Renderer do
   Evaluates Blendend.Draw code and returns base64-encoded PNG output.
   """
 
-  @spec render(String.t()) :: {:ok, String.t()} | {:error, String.t()}
   def render(code) when is_binary(code) do
     header = """
     use Blendend.Draw
