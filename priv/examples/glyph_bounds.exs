@@ -10,10 +10,10 @@ draw 1280, 1220 do
 
   font_bold = font("Maplemono", 22.0)
   font_debug_color = hsv(240, 0.1, 1)
-  text = "NH3"
+  text = "习惯"
 
-  face = Blendend.Text.Face.load!("priv/fonts/AlegreyaSans-Regular.otf")
-  font_debug = Blendend.Text.Font.create_with_features!(face, 482.0, [{"subs", 1}])
+  face = Blendend.Text.Face.load!("/home/nevroz/.fonts/fandol/FandolKai-Regular.otf")
+  font_debug = Blendend.Text.Font.create_with_features!(face, 282.0, [{"subs", 1}])
 
   TextBoundLayout.inspect(font_debug, font_bold, text, base_x, base_y, font_debug_color)
 end
